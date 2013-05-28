@@ -1,4 +1,4 @@
-package com.yamj.api.common.http;
+package com.moviejukebox.api.common.http;
 
 import java.io.IOException;
 import java.net.URI;
