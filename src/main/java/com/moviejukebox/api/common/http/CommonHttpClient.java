@@ -5,6 +5,7 @@ import java.net.URI;
 import java.net.URL;
 import java.nio.charset.Charset;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
 
 public interface CommonHttpClient extends HttpClient {
 
@@ -23,4 +24,8 @@ public interface CommonHttpClient extends HttpClient {
     String requestContent(URI uri) throws IOException;
 
     String requestContent(URI uri, Charset charset) throws IOException;
+
+    String requestContent(HttpGet httpGet) throws IOException;
+
+    String requestContent(HttpGet httpGet, Charset charset) throws IOException;
 }

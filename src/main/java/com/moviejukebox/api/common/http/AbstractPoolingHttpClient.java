@@ -95,6 +95,7 @@ public abstract class AbstractPoolingHttpClient extends AbstractHttpClient imple
         HttpConnectionParams.setConnectionTimeout(params, connectionTimeout);
         HttpConnectionParams.setSoTimeout(params, socketTimeout);
         
+
         // set default proxy
         if (StringUtils.isNotBlank(proxyHost) && proxyPort > 0) {
             if (StringUtils.isNotBlank(proxyUsername) && StringUtils.isNotBlank(proxyPassword)) {
