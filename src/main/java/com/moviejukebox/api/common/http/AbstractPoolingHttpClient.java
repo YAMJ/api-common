@@ -28,6 +28,8 @@ public abstract class AbstractPoolingHttpClient extends AbstractHttpClient imple
     private int proxyPort = 0;
     private String proxyUsername = null;
     private String proxyPassword = null;
+    private int connectionTimeout = 25000;
+    private int socketTimeout = 90000;
     private int connectionsMaxPerRoute = 1;
     private int connectionsMaxTotal = 20;
     
@@ -35,13 +37,14 @@ public abstract class AbstractPoolingHttpClient extends AbstractHttpClient imple
         super(connectionManager, httpParams);
     }
 
+    @Override
     public void setProxy(String host, int port, String username, String password) {
         setProxyHost(host);
         setProxyPort(port);
         setProxyUsername(username);
         setProxyPassword(password);
     }
-    
+
     public void setProxyHost(String proxyHost) {
         this.proxyHost = proxyHost;
     }
@@ -58,6 +61,20 @@ public abstract class AbstractPoolingHttpClient extends AbstractHttpClient imple
         this.proxyPassword = proxyPassword;
     }
     
+    @Override
+    public void setTimeouts(int connectionTimeout, int socketTimeout) {
+        setConnectionTimeout(connectionTimeout);
+        setSocketTimeout(socketTimeout);
+    }
+
+    public void setConnectionTimeout(int connectionTimeout) {
+        this.connectionTimeout = connectionTimeout;
+    }
+
+    public void setSocketTimeout(int socketTimeout) {
+        this.socketTimeout = socketTimeout;
+    }
+
     public void setConnectionsMaxPerRoute(int connectionsMaxPerRoute) {
         this.connectionsMaxPerRoute = connectionsMaxPerRoute;
     }
@@ -73,6 +90,10 @@ public abstract class AbstractPoolingHttpClient extends AbstractHttpClient imple
         HttpProtocolParams.setContentCharset(params, Consts.UTF_8.name());
         HttpConnectionParams.setTcpNoDelay(params, true);
         HttpConnectionParams.setSocketBufferSize(params, 8192);
+        
+        // set timeouts
+        HttpConnectionParams.setConnectionTimeout(params, connectionTimeout);
+        HttpConnectionParams.setSoTimeout(params, socketTimeout);
         
         // set default proxy
         if (StringUtils.isNotBlank(proxyHost) && proxyPort > 0) {
