@@ -58,7 +58,7 @@ public class DefaultPoolingHttpClient extends AbstractPoolingHttpClient {
 
     @Override
     public String requestContent(URI uri) throws IOException {
-        return this.requestContent(uri, null);
+        return requestContent(uri, null);
     }
 
     @Override
