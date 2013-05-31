@@ -1,4 +1,4 @@
-package com.moviejukebox.api.common.http;
+package org.yamj.api.common.http;
 
 import org.apache.http.client.protocol.*;
 import org.apache.http.protocol.*;
