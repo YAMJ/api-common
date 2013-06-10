@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URL;
 import java.nio.charset.Charset;
+import org.apache.http.HttpEntity;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 
@@ -28,4 +29,12 @@ public interface CommonHttpClient extends HttpClient {
     String requestContent(HttpGet httpGet) throws IOException;
 
     String requestContent(HttpGet httpGet, Charset charset) throws IOException;
+    
+    HttpEntity requestResource(URL url) throws IOException;
+
+    HttpEntity requestResource(String uri) throws IOException;
+
+    HttpEntity requestResource(URI uri) throws IOException;
+
+    HttpEntity requestResource(HttpGet httpGet) throws IOException;
 }
