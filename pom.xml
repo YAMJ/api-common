@@ -15,7 +15,7 @@
     <artifactId>api-common</artifactId>
     <name>API-Common</name>
     <description>Common functions for the APIs used by YAMJ</description>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0</version>
     <packaging>jar</packaging>
     <url>https://github.com/YAMJ/api-common</url>
     <inceptionYear>2013</inceptionYear>
