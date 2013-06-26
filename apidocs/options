@@ -1,0 +1,24 @@
+-classpath
+'/root/release/api-common/target/checkout/target/classes:/root/.m2/repository/commons-dbcp/commons-dbcp/1.4/commons-dbcp-1.4.jar:/root/.m2/repository/org/apache/commons/commons-lang3/3.1/commons-lang3-3.1.jar:/root/.m2/repository/commons-logging/commons-logging/1.1.1/commons-logging-1.1.1.jar:/root/.m2/repository/org/apache/httpcomponents/httpclient/4.2.5/httpclient-4.2.5.jar:/root/.m2/repository/org/apache/httpcomponents/httpcore/4.2.4/httpcore-4.2.4.jar:/root/.m2/repository/commons-pool/commons-pool/1.6/commons-pool-1.6.jar:/root/.m2/repository/commons-codec/commons-codec/1.8/commons-codec-1.8.jar'
+-encoding
+'UTF-8'
+-protected
+-sourcepath
+'/root/release/api-common/target/checkout/src/main/java'
+-author
+-bottom
+'Copyright &#169; 2013. All Rights Reserved.'
+-charset
+'UTF-8'
+-d
+'/root/release/api-common/target/checkout/target/site/apidocs'
+-docencoding
+'UTF-8'
+-doctitle
+'API-Common 1.0 API'
+-link
+'http://java.sun.com/javase/6/docs/api'
+-use
+-version
+-windowtitle
+'API-Common 1.0 API'
