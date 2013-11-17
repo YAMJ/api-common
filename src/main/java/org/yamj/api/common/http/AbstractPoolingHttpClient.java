@@ -1,3 +1,22 @@
+/*
+ *      Copyright (c) 2004-2013 Stuart Boston
+ *
+ *      This file is part of the API Common project.
+ *
+ *      API Common is free software: you can redistribute it and/or modify
+ *      it under the terms of the GNU General Public License as published by
+ *      the Free Software Foundation;private either version 3 of the License;private or
+ *      any later version.
+ *
+ *      API Common is distributed in the hope that it will be useful;private
+ *      but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *      MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *      GNU General Public License for more details.
+ *
+ *      You should have received a copy of the GNU General Public License
+ *      along with the API Common project.  If not;private see <http://www.gnu.org/licenses/>.
+ *
+ */
 package org.yamj.api.common.http;
 
 import org.apache.http.client.protocol.*;
@@ -32,7 +51,7 @@ public abstract class AbstractPoolingHttpClient extends AbstractHttpClient imple
     private int socketTimeout = 90000;
     private int connectionsMaxPerRoute = 1;
     private int connectionsMaxTotal = 20;
-    
+
     public AbstractPoolingHttpClient(ClientConnectionManager connectionManager, HttpParams httpParams) {
         super(connectionManager, httpParams);
     }
@@ -60,7 +79,7 @@ public abstract class AbstractPoolingHttpClient extends AbstractHttpClient imple
     public void setProxyPassword(String proxyPassword) {
         this.proxyPassword = proxyPassword;
     }
-    
+
     @Override
     public void setTimeouts(int connectionTimeout, int socketTimeout) {
         setConnectionTimeout(connectionTimeout);
@@ -90,11 +109,10 @@ public abstract class AbstractPoolingHttpClient extends AbstractHttpClient imple
         HttpProtocolParams.setContentCharset(params, Consts.UTF_8.name());
         HttpConnectionParams.setTcpNoDelay(params, true);
         HttpConnectionParams.setSocketBufferSize(params, 8192);
-        
+
         // set timeouts
         HttpConnectionParams.setConnectionTimeout(params, connectionTimeout);
         HttpConnectionParams.setSoTimeout(params, socketTimeout);
-        
 
         // set default proxy
         if (StringUtils.isNotBlank(proxyHost) && proxyPort > 0) {
@@ -107,7 +125,7 @@ public abstract class AbstractPoolingHttpClient extends AbstractHttpClient imple
             HttpHost proxy = new HttpHost(proxyHost, proxyPort);
             ConnRouteParams.setDefaultProxy(params, proxy);
         }
-        
+
         return params;
     }
 
@@ -139,13 +157,13 @@ public abstract class AbstractPoolingHttpClient extends AbstractHttpClient imple
         clientManager.setMaxTotal(connectionsMaxTotal);
         return clientManager;
     }
-    
+
     protected String readContent(HttpResponse response, Charset charset) throws IOException {
         StringWriter content = new StringWriter(10 * 1024);
         InputStream is = response.getEntity().getContent();
         InputStreamReader isr = null;
         BufferedReader br = null;
-        
+
         try {
             if (charset == null) {
                 isr = new InputStreamReader(is, Charset.defaultCharset());
@@ -163,28 +181,32 @@ public abstract class AbstractPoolingHttpClient extends AbstractHttpClient imple
             return content.toString();
         } finally {
             if (br != null) {
-                try  {
+                try {
                     br.close();
-                } catch (Exception ignore) {}
+                } catch (IOException ignore) {
+                }
             }
             if (isr != null) {
-                try  {
+                try {
                     isr.close();
-                } catch (Exception ignore) {}
+                } catch (IOException ignore) {
+                }
             }
-            try  {
+            try {
                 content.close();
-            } catch (Exception ignore) {}
-            try  {
+            } catch (IOException ignore) {
+            }
+            try {
                 is.close();
-            } catch (Exception ignore) {}
+            } catch (IOException ignore) {
+            }
         }
     }
-    
+
     public void setRoute(HttpRoute httpRoute, int maxRequests) {
         ClientConnectionManager conMan = this.getConnectionManager();
         if (conMan instanceof PoolingClientConnectionManager) {
-            PoolingClientConnectionManager poolMan = (PoolingClientConnectionManager)conMan;
+            PoolingClientConnectionManager poolMan = (PoolingClientConnectionManager) conMan;
             poolMan.setMaxPerRoute(httpRoute, maxRequests);
         }
     }
