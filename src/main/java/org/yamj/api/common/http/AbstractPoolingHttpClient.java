@@ -19,10 +19,11 @@
  */
 package org.yamj.api.common.http;
 
-import org.apache.http.client.protocol.*;
-import org.apache.http.protocol.*;
-
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.StringWriter;
 import java.nio.charset.Charset;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.Consts;
@@ -31,6 +32,13 @@ import org.apache.http.HttpResponse;
 import org.apache.http.HttpVersion;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
+import org.apache.http.client.protocol.RequestAddCookies;
+import org.apache.http.client.protocol.RequestAuthCache;
+import org.apache.http.client.protocol.RequestClientConnControl;
+import org.apache.http.client.protocol.RequestDefaultHeaders;
+import org.apache.http.client.protocol.RequestProxyAuthentication;
+import org.apache.http.client.protocol.RequestTargetAuthentication;
+import org.apache.http.client.protocol.ResponseProcessCookies;
 import org.apache.http.conn.ClientConnectionManager;
 import org.apache.http.conn.params.ConnRouteParams;
 import org.apache.http.conn.routing.HttpRoute;
@@ -40,9 +48,17 @@ import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
 import org.apache.http.params.HttpProtocolParams;
 import org.apache.http.params.SyncBasicHttpParams;
+import org.apache.http.protocol.BasicHttpProcessor;
+import org.apache.http.protocol.RequestContent;
+import org.apache.http.protocol.RequestExpectContinue;
+import org.apache.http.protocol.RequestTargetHost;
+import org.apache.http.protocol.RequestUserAgent;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public abstract class AbstractPoolingHttpClient extends AbstractHttpClient implements CommonHttpClient {
 
+    private static final Logger LOG = LoggerFactory.getLogger(AbstractPoolingHttpClient.class);
     private String proxyHost = null;
     private int proxyPort = 0;
     private String proxyUsername = null;
@@ -172,9 +188,10 @@ public abstract class AbstractPoolingHttpClient extends AbstractHttpClient imple
             }
             br = new BufferedReader(isr);
 
-            String line;
-            while ((line = br.readLine()) != null) {
+            String line = br.readLine();
+            while (line != null) {
                 content.write(line);
+                line = br.readLine();
             }
 
             content.flush();
@@ -183,22 +200,26 @@ public abstract class AbstractPoolingHttpClient extends AbstractHttpClient imple
             if (br != null) {
                 try {
                     br.close();
-                } catch (IOException ignore) {
+                } catch (IOException ex) {
+                    LOG.trace("Failed to close BufferedReader", ex);
                 }
             }
             if (isr != null) {
                 try {
                     isr.close();
-                } catch (IOException ignore) {
+                } catch (IOException ex) {
+                    LOG.trace("Failed to close InputStreamReader", ex);
                 }
             }
             try {
                 content.close();
-            } catch (IOException ignore) {
+            } catch (IOException ex) {
+                LOG.trace("Failed to close StringWriter", ex);
             }
             try {
                 is.close();
-            } catch (IOException ignore) {
+            } catch (IOException ex) {
+                LOG.trace("Failed to close InputStream", ex);
             }
         }
     }

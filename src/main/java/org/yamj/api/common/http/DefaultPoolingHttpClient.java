@@ -32,6 +32,8 @@ import org.apache.http.params.HttpParams;
 
 public class DefaultPoolingHttpClient extends AbstractPoolingHttpClient {
 
+    private static final String INVALID_URL = "Invalid URL ";
+
     public DefaultPoolingHttpClient() {
         this(null, null);
     }
@@ -59,7 +61,7 @@ public class DefaultPoolingHttpClient extends AbstractPoolingHttpClient {
         try {
             uri = url.toURI();
         } catch (URISyntaxException ex) {
-            throw new IllegalArgumentException("Invalid url " + url, ex);
+            throw new IllegalArgumentException(INVALID_URL + url, ex);
         }
 
         return requestContent(uri, charset);
@@ -104,7 +106,7 @@ public class DefaultPoolingHttpClient extends AbstractPoolingHttpClient {
         try {
             uri = url.toURI();
         } catch (URISyntaxException ex) {
-            throw new IllegalArgumentException("Invalid url " + url, ex);
+            throw new IllegalArgumentException(INVALID_URL + url, ex);
         }
 
         return requestResource(uri);
