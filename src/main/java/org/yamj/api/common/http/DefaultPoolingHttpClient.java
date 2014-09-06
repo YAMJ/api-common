@@ -19,6 +19,8 @@
  */
 package org.yamj.api.common.http;
 
+import org.apache.http.protocol.HTTP;
+
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -33,7 +35,8 @@ import org.apache.http.params.HttpParams;
 public class DefaultPoolingHttpClient extends AbstractPoolingHttpClient {
 
     private static final String INVALID_URL = "Invalid URL ";
-
+    private boolean randomUserAgent = false;
+    
     public DefaultPoolingHttpClient() {
         this(null, null);
     }
@@ -96,6 +99,9 @@ public class DefaultPoolingHttpClient extends AbstractPoolingHttpClient {
 
     @Override
     public String requestContent(HttpGet httpGet, Charset charset) throws IOException {
+        if (randomUserAgent) {
+        	httpGet.setHeader(HTTP.USER_AGENT, UserAgentSelector.randomUserAgent());
+        }
         HttpResponse response = execute(httpGet);
         return readContent(response, charset);
     }
@@ -126,7 +132,10 @@ public class DefaultPoolingHttpClient extends AbstractPoolingHttpClient {
 
     @Override
     public HttpEntity requestResource(HttpGet httpGet) throws IOException {
-        HttpResponse response = execute(httpGet);
+        if (randomUserAgent) {
+        	httpGet.setHeader(HTTP.USER_AGENT, UserAgentSelector.randomUserAgent());
+        }
+    	HttpResponse response = execute(httpGet);
         return response.getEntity();
     }
 }
