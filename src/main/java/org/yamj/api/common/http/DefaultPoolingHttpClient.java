@@ -53,6 +53,10 @@ public class DefaultPoolingHttpClient extends AbstractPoolingHttpClient {
         super(connectionManager, httpParams);
     }
 
+    public void setRandomUserAgent(boolean randomUserAgent) {
+        this.randomUserAgent = randomUserAgent;
+    }
+
     @Override
     public String requestContent(URL url) throws IOException {
         return requestContent(url, null);
