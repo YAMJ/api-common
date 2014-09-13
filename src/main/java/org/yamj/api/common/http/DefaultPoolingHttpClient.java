@@ -19,8 +19,6 @@
  */
 package org.yamj.api.common.http;
 
-import org.apache.http.protocol.HTTP;
-
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -31,11 +29,12 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.conn.ClientConnectionManager;
 import org.apache.http.params.HttpParams;
+import org.apache.http.protocol.HTTP;
 
 public class DefaultPoolingHttpClient extends AbstractPoolingHttpClient {
 
     private static final String INVALID_URL = "Invalid URL ";
-    private boolean randomUserAgent = false;
+    protected boolean randomUserAgent = false;
     
     public DefaultPoolingHttpClient() {
         this(null, null);
@@ -53,7 +52,7 @@ public class DefaultPoolingHttpClient extends AbstractPoolingHttpClient {
         super(connectionManager, httpParams);
     }
 
-    public void setRandomUserAgent(boolean randomUserAgent) {
+    public final void setRandomUserAgent(boolean randomUserAgent) {
         this.randomUserAgent = randomUserAgent;
     }
 
@@ -106,8 +105,19 @@ public class DefaultPoolingHttpClient extends AbstractPoolingHttpClient {
         if (randomUserAgent) {
         	httpGet.setHeader(HTTP.USER_AGENT, UserAgentSelector.randomUserAgent());
         }
-        HttpResponse response = execute(httpGet);
-        return readContent(response, charset);
+        
+        try {
+            HttpResponse response = execute(httpGet);
+            if (response.getEntity() == null) {
+                httpGet.releaseConnection();
+                throw new RuntimeException("No response for uri " + httpGet.getURI());
+            } else {
+                return readContent(response, charset);
+            }
+        } catch (IOException ioe) {
+            httpGet.releaseConnection();
+            throw ioe;
+        }
     }
 
     @Override
