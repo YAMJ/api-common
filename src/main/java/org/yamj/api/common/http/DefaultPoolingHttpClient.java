@@ -35,7 +35,7 @@ public class DefaultPoolingHttpClient extends AbstractPoolingHttpClient {
 
     private static final String INVALID_URL = "Invalid URL ";
     protected boolean randomUserAgent = false;
-    
+
     public DefaultPoolingHttpClient() {
         this(null, null);
     }
@@ -105,12 +105,12 @@ public class DefaultPoolingHttpClient extends AbstractPoolingHttpClient {
         if (randomUserAgent) {
         	httpGet.setHeader(HTTP.USER_AGENT, UserAgentSelector.randomUserAgent());
         }
-        
+
         try {
             HttpResponse response = execute(httpGet);
             if (response.getEntity() == null) {
                 httpGet.releaseConnection();
-                throw new RuntimeException("No response for uri " + httpGet.getURI());
+                throw new IOException("No response for URI " + httpGet.getURI());
             } else {
                 return readContent(response, charset);
             }
