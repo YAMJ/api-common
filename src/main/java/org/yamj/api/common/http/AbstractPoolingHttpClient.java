@@ -59,17 +59,35 @@ import org.slf4j.LoggerFactory;
 public abstract class AbstractPoolingHttpClient extends AbstractHttpClient implements CommonHttpClient {
 
     private static final Logger LOG = LoggerFactory.getLogger(AbstractPoolingHttpClient.class);
-    private String proxyHost = null;
-    private int proxyPort = 0;
-    private String proxyUsername = null;
-    private String proxyPassword = null;
-    private int connectionTimeout = 25000;
-    private int socketTimeout = 90000;
-    private int connectionsMaxPerRoute = 1;
-    private int connectionsMaxTotal = 20;
+    // Default settings for the connections
+    private static final int DEFAULT_TIMEOUT_CONNECTION = 25000;
+    private static final int DEFAULT_TIMEOUT_SOCKET = 90000;
+    private static final int DEFAULT_CONN_ROUTE = 1;
+    private static final int DEFAULT_CONN_MAX = 20;
+
+    private String proxyHost;
+    private int proxyPort;
+    private String proxyUsername;
+    private String proxyPassword;
+    private int connectionTimeout;
+    private int socketTimeout;
+    private int connectionsMaxPerRoute;
+    private int connectionsMaxTotal;
 
     public AbstractPoolingHttpClient(ClientConnectionManager connectionManager, HttpParams httpParams) {
         super(connectionManager, httpParams);
+
+        // Set the defaults for the proxy
+        this.proxyHost = null;
+        this.proxyPort = 0;
+        this.proxyUsername = null;
+        this.proxyPassword = null;
+
+        // Set the defaults for the connections
+        this.connectionTimeout = DEFAULT_TIMEOUT_CONNECTION;
+        this.socketTimeout = DEFAULT_TIMEOUT_SOCKET;
+        this.connectionsMaxPerRoute = DEFAULT_CONN_ROUTE;
+        this.connectionsMaxTotal = DEFAULT_CONN_MAX;
     }
 
     @Override
