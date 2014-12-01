@@ -65,6 +65,11 @@ public abstract class AbstractPoolingHttpClient extends AbstractHttpClient imple
     private static final int DEFAULT_CONN_ROUTE = 1;
     private static final int DEFAULT_CONN_MAX = 20;
 
+    // Buffer sizes
+    private static final int SOCKET_BUFFER_8K = 8192;
+    private static final int SW_BUFFER_10K = 10240;
+
+    // Variables
     private String proxyHost;
     private int proxyPort;
     private String proxyUsername;
@@ -142,7 +147,7 @@ public abstract class AbstractPoolingHttpClient extends AbstractHttpClient imple
         HttpProtocolParams.setVersion(params, HttpVersion.HTTP_1_1);
         HttpProtocolParams.setContentCharset(params, Consts.UTF_8.name());
         HttpConnectionParams.setTcpNoDelay(params, true);
-        HttpConnectionParams.setSocketBufferSize(params, 8192);
+        HttpConnectionParams.setSocketBufferSize(params, SOCKET_BUFFER_8K);
 
         // set timeouts
         HttpConnectionParams.setConnectionTimeout(params, connectionTimeout);
@@ -193,7 +198,7 @@ public abstract class AbstractPoolingHttpClient extends AbstractHttpClient imple
     }
 
     protected String readContent(HttpResponse response, Charset charset) throws IOException {
-        StringWriter content = new StringWriter(10 * 1024);
+        StringWriter content = new StringWriter(SW_BUFFER_10K);
         InputStream is = response.getEntity().getContent();
         InputStreamReader isr = null;
         BufferedReader br = null;

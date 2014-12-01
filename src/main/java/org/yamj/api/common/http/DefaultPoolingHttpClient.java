@@ -103,7 +103,7 @@ public class DefaultPoolingHttpClient extends AbstractPoolingHttpClient {
     @Override
     public String requestContent(HttpGet httpGet, Charset charset) throws IOException {
         if (randomUserAgent) {
-        	httpGet.setHeader(HTTP.USER_AGENT, UserAgentSelector.randomUserAgent());
+            httpGet.setHeader(HTTP.USER_AGENT, UserAgentSelector.randomUserAgent());
         }
 
         try {
@@ -147,9 +147,9 @@ public class DefaultPoolingHttpClient extends AbstractPoolingHttpClient {
     @Override
     public HttpEntity requestResource(HttpGet httpGet) throws IOException {
         if (randomUserAgent) {
-        	httpGet.setHeader(HTTP.USER_AGENT, UserAgentSelector.randomUserAgent());
+            httpGet.setHeader(HTTP.USER_AGENT, UserAgentSelector.randomUserAgent());
         }
-    	HttpResponse response = execute(httpGet);
+        HttpResponse response = execute(httpGet);
         return response.getEntity();
     }
 }
