@@ -25,6 +25,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.StringWriter;
 import java.nio.charset.Charset;
+
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.Consts;
 import org.apache.http.HttpHost;
@@ -197,11 +198,14 @@ public abstract class AbstractPoolingHttpClient extends AbstractHttpClient imple
         return clientManager;
     }
 
-    protected String readContent(HttpResponse response, Charset charset) throws IOException {
+    protected DigestedResponse readContent(final HttpResponse response, final Charset charset) throws IOException {
         StringWriter content = new StringWriter(SW_BUFFER_10K);
         InputStream is = response.getEntity().getContent();
         InputStreamReader isr = null;
         BufferedReader br = null;
+
+        final DigestedResponse digestedResponse = new DigestedResponse();
+        digestedResponse.setStatusCode(response.getStatusLine().getStatusCode());
 
         try {
             if (charset == null) {
@@ -218,7 +222,8 @@ public abstract class AbstractPoolingHttpClient extends AbstractHttpClient imple
             }
 
             content.flush();
-            return content.toString();
+            digestedResponse.setContent(content.toString());
+            return digestedResponse;
         } finally {
             if (br != null) {
                 try {

@@ -202,6 +202,8 @@
                 <configuration>
                     <failOnError>true</failOnError>
                     <verbose>true</verbose>
+                    <source>1.6</source>
+                    <target>1.6</target>
                 </configuration>
             </plugin>
             <plugin>

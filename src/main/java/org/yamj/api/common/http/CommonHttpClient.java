@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URL;
 import java.nio.charset.Charset;
+
 import org.apache.http.HttpEntity;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
@@ -33,21 +34,21 @@ public interface CommonHttpClient extends HttpClient {
 
     void setTimeouts(int connectionTimeout, int socketTimeout);
 
-    String requestContent(URL url) throws IOException;
+    DigestedResponse requestContent(URL url) throws IOException;
 
-    String requestContent(URL url, Charset charset) throws IOException;
+    DigestedResponse requestContent(URL url, Charset charset) throws IOException;
 
-    String requestContent(String uri) throws IOException;
+    DigestedResponse requestContent(String uri) throws IOException;
 
-    String requestContent(String uri, Charset charset) throws IOException;
+    DigestedResponse requestContent(String uri, Charset charset) throws IOException;
 
-    String requestContent(URI uri) throws IOException;
+    DigestedResponse requestContent(URI uri) throws IOException;
 
-    String requestContent(URI uri, Charset charset) throws IOException;
+    DigestedResponse requestContent(URI uri, Charset charset) throws IOException;
 
-    String requestContent(HttpGet httpGet) throws IOException;
+    DigestedResponse requestContent(HttpGet httpGet) throws IOException;
 
-    String requestContent(HttpGet httpGet, Charset charset) throws IOException;
+    DigestedResponse requestContent(HttpGet httpGet, Charset charset) throws IOException;
 
     HttpEntity requestResource(URL url) throws IOException;
 
