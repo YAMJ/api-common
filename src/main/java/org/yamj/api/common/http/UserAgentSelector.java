@@ -57,7 +57,7 @@ public class UserAgentSelector {
     }
 
     public static String randomUserAgent() {
-        int i = RandomUtils.nextInt(0, USER_AGENTS.size());
+        final int i = RandomUtils.nextInt(0, USER_AGENTS.size());
         return USER_AGENTS.get(i);
     }
 }

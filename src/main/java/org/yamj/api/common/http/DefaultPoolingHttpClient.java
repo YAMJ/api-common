@@ -24,7 +24,6 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.charset.Charset;
-
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
@@ -81,7 +80,7 @@ public class DefaultPoolingHttpClient extends AbstractPoolingHttpClient {
 
     @Override
     public DigestedResponse requestContent(String uri, Charset charset) throws IOException {
-        HttpGet httpGet = new HttpGet(uri);
+        final HttpGet httpGet = new HttpGet(uri);
         return requestContent(httpGet, charset);
     }
 
@@ -92,7 +91,7 @@ public class DefaultPoolingHttpClient extends AbstractPoolingHttpClient {
 
     @Override
     public DigestedResponse requestContent(URI uri, Charset charset) throws IOException {
-        HttpGet httpGet = new HttpGet(uri);
+        final HttpGet httpGet = new HttpGet(uri);
         return requestContent(httpGet, charset);
     }
 
@@ -111,7 +110,6 @@ public class DefaultPoolingHttpClient extends AbstractPoolingHttpClient {
 
             final HttpResponse response = execute(httpGet);
             if (response.getEntity() == null) {
-                httpGet.releaseConnection();
                 throw new IOException("No response for URI " + httpGet.getURI());
             }
 
@@ -137,13 +135,13 @@ public class DefaultPoolingHttpClient extends AbstractPoolingHttpClient {
 
     @Override
     public HttpEntity requestResource(String uri) throws IOException {
-        HttpGet httpGet = new HttpGet(uri);
+        final HttpGet httpGet = new HttpGet(uri);
         return requestResource(httpGet);
     }
 
     @Override
     public HttpEntity requestResource(URI uri) throws IOException {
-        HttpGet httpGet = new HttpGet(uri);
+        final HttpGet httpGet = new HttpGet(uri);
         return requestResource(httpGet);
     }
 
@@ -152,7 +150,7 @@ public class DefaultPoolingHttpClient extends AbstractPoolingHttpClient {
         if (randomUserAgent) {
             httpGet.setHeader(HTTP.USER_AGENT, UserAgentSelector.randomUserAgent());
         }
-        HttpResponse response = execute(httpGet);
+        final HttpResponse response = execute(httpGet);
         return response.getEntity();
     }
 }

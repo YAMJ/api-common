@@ -19,13 +19,8 @@
  */
 package org.yamj.api.common.http;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.StringWriter;
+import java.io.*;
 import java.nio.charset.Charset;
-
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.Consts;
 import org.apache.http.HttpHost;
@@ -33,13 +28,7 @@ import org.apache.http.HttpResponse;
 import org.apache.http.HttpVersion;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
-import org.apache.http.client.protocol.RequestAddCookies;
-import org.apache.http.client.protocol.RequestAuthCache;
-import org.apache.http.client.protocol.RequestClientConnControl;
-import org.apache.http.client.protocol.RequestDefaultHeaders;
-import org.apache.http.client.protocol.RequestProxyAuthentication;
-import org.apache.http.client.protocol.RequestTargetAuthentication;
-import org.apache.http.client.protocol.ResponseProcessCookies;
+import org.apache.http.client.protocol.*;
 import org.apache.http.conn.ClientConnectionManager;
 import org.apache.http.conn.params.ConnRouteParams;
 import org.apache.http.conn.routing.HttpRoute;
@@ -49,11 +38,8 @@ import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
 import org.apache.http.params.HttpProtocolParams;
 import org.apache.http.params.SyncBasicHttpParams;
-import org.apache.http.protocol.BasicHttpProcessor;
-import org.apache.http.protocol.RequestContent;
+import org.apache.http.protocol.*;
 import org.apache.http.protocol.RequestExpectContinue;
-import org.apache.http.protocol.RequestTargetHost;
-import org.apache.http.protocol.RequestUserAgent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -97,54 +83,54 @@ public abstract class AbstractPoolingHttpClient extends AbstractHttpClient imple
     }
 
     @Override
-    public void setProxy(String host, int port, String username, String password) {
+    public void setProxy(final String host, final int port, final String username, final String password) {
         setProxyHost(host);
         setProxyPort(port);
         setProxyUsername(username);
         setProxyPassword(password);
     }
 
-    public void setProxyHost(String proxyHost) {
+    public void setProxyHost(final String proxyHost) {
         this.proxyHost = proxyHost;
     }
 
-    public void setProxyPort(int proxyPort) {
+    public void setProxyPort(final int proxyPort) {
         this.proxyPort = proxyPort;
     }
 
-    public void setProxyUsername(String proxyUsername) {
+    public void setProxyUsername(final String proxyUsername) {
         this.proxyUsername = proxyUsername;
     }
 
-    public void setProxyPassword(String proxyPassword) {
+    public void setProxyPassword(final String proxyPassword) {
         this.proxyPassword = proxyPassword;
     }
 
     @Override
-    public void setTimeouts(int connectionTimeout, int socketTimeout) {
+    public void setTimeouts(final int connectionTimeout, final int socketTimeout) {
         setConnectionTimeout(connectionTimeout);
         setSocketTimeout(socketTimeout);
     }
 
-    public void setConnectionTimeout(int connectionTimeout) {
+    public void setConnectionTimeout(final int connectionTimeout) {
         this.connectionTimeout = connectionTimeout;
     }
 
-    public void setSocketTimeout(int socketTimeout) {
+    public void setSocketTimeout(final int socketTimeout) {
         this.socketTimeout = socketTimeout;
     }
 
-    public void setConnectionsMaxPerRoute(int connectionsMaxPerRoute) {
+    public void setConnectionsMaxPerRoute(final int connectionsMaxPerRoute) {
         this.connectionsMaxPerRoute = connectionsMaxPerRoute;
     }
 
-    public void setConnectionsMaxTotal(int connectionsMaxTotal) {
+    public void setConnectionsMaxTotal(final int connectionsMaxTotal) {
         this.connectionsMaxTotal = connectionsMaxTotal;
     }
 
     @Override
     protected HttpParams createHttpParams() {
-        HttpParams params = new SyncBasicHttpParams();
+        final HttpParams params = new SyncBasicHttpParams();
         HttpProtocolParams.setVersion(params, HttpVersion.HTTP_1_1);
         HttpProtocolParams.setContentCharset(params, Consts.UTF_8.name());
         HttpConnectionParams.setTcpNoDelay(params, true);
@@ -162,7 +148,7 @@ public abstract class AbstractPoolingHttpClient extends AbstractHttpClient imple
                         new UsernamePasswordCredentials(proxyUsername, proxyPassword));
             }
 
-            HttpHost proxy = new HttpHost(proxyHost, proxyPort);
+            final HttpHost proxy = new HttpHost(proxyHost, proxyPort);
             ConnRouteParams.setDefaultProxy(params, proxy);
         }
 
@@ -192,15 +178,15 @@ public abstract class AbstractPoolingHttpClient extends AbstractHttpClient imple
 
     @Override
     protected ClientConnectionManager createClientConnectionManager() {
-        PoolingClientConnectionManager clientManager = new PoolingClientConnectionManager();
+        final PoolingClientConnectionManager clientManager = new PoolingClientConnectionManager();
         clientManager.setDefaultMaxPerRoute(connectionsMaxPerRoute);
         clientManager.setMaxTotal(connectionsMaxTotal);
         return clientManager;
     }
 
     protected DigestedResponse readContent(final HttpResponse response, final Charset charset) throws IOException {
-        StringWriter content = new StringWriter(SW_BUFFER_10K);
-        InputStream is = response.getEntity().getContent();
+        final StringWriter content = new StringWriter(SW_BUFFER_10K);
+        final InputStream is = response.getEntity().getContent();
         InputStreamReader isr = null;
         BufferedReader br = null;
 
@@ -252,8 +238,8 @@ public abstract class AbstractPoolingHttpClient extends AbstractHttpClient imple
         }
     }
 
-    public void setRoute(HttpRoute httpRoute, int maxRequests) {
-        ClientConnectionManager conMan = this.getConnectionManager();
+    public void setRoute(final HttpRoute httpRoute, final int maxRequests) {
+        final ClientConnectionManager conMan = this.getConnectionManager();
         if (conMan instanceof PoolingClientConnectionManager) {
             PoolingClientConnectionManager poolMan = (PoolingClientConnectionManager) conMan;
             poolMan.setMaxPerRoute(httpRoute, maxRequests);
