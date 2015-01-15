@@ -24,6 +24,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.charset.Charset;
+
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
@@ -57,12 +58,12 @@ public class DefaultPoolingHttpClient extends AbstractPoolingHttpClient {
     }
 
     @Override
-    public String requestContent(URL url) throws IOException {
+    public DigestedResponse requestContent(URL url) throws IOException {
         return requestContent(url, null);
     }
 
     @Override
-    public String requestContent(URL url, Charset charset) throws IOException {
+    public DigestedResponse requestContent(URL url, Charset charset) throws IOException {
         URI uri;
         try {
             uri = url.toURI();
@@ -74,46 +75,48 @@ public class DefaultPoolingHttpClient extends AbstractPoolingHttpClient {
     }
 
     @Override
-    public String requestContent(String uri) throws IOException {
+    public DigestedResponse requestContent(String uri) throws IOException {
         return requestContent(uri, null);
     }
 
     @Override
-    public String requestContent(String uri, Charset charset) throws IOException {
+    public DigestedResponse requestContent(String uri, Charset charset) throws IOException {
         HttpGet httpGet = new HttpGet(uri);
         return requestContent(httpGet, charset);
     }
 
     @Override
-    public String requestContent(URI uri) throws IOException {
+    public DigestedResponse requestContent(URI uri) throws IOException {
         return requestContent(uri, null);
     }
 
     @Override
-    public String requestContent(URI uri, Charset charset) throws IOException {
+    public DigestedResponse requestContent(URI uri, Charset charset) throws IOException {
         HttpGet httpGet = new HttpGet(uri);
         return requestContent(httpGet, charset);
     }
 
     @Override
-    public String requestContent(HttpGet httpGet) throws IOException {
+    public DigestedResponse requestContent(HttpGet httpGet) throws IOException {
         return requestContent(httpGet, null);
     }
 
     @Override
-    public String requestContent(HttpGet httpGet, Charset charset) throws IOException {
+    public DigestedResponse requestContent(HttpGet httpGet, Charset charset) throws IOException {
         if (randomUserAgent) {
             httpGet.setHeader(HTTP.USER_AGENT, UserAgentSelector.randomUserAgent());
         }
 
         try {
-            HttpResponse response = execute(httpGet);
+
+            final HttpResponse response = execute(httpGet);
             if (response.getEntity() == null) {
                 httpGet.releaseConnection();
                 throw new IOException("No response for URI " + httpGet.getURI());
-            } else {
-                return readContent(response, charset);
             }
+
+            return readContent(response, charset);
+
         } catch (IOException ioe) {
             httpGet.releaseConnection();
             throw ioe;
