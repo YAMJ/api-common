@@ -17,7 +17,7 @@
  *      along with the API Common project.  If not;private see <http://www.gnu.org/licenses/>.
  *
  */
-package org.yamj.api.common;
+package org.yamj.api.common.exception;
 
 /**
  * Enumeration for the possible errors returned by the API

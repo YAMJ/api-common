@@ -17,10 +17,15 @@
  *      along with the API Common project.  If not;private see <http://www.gnu.org/licenses/>.
  *
  */
-package org.yamj.api.common;
+package org.yamj.api.common.exception;
 
 import java.net.URL;
 
+/**
+ * Exception for API Classes to use
+ *
+ * @author Stuart
+ */
 public class ApiException extends Exception {
 
     private static final long serialVersionUID = 1L;
