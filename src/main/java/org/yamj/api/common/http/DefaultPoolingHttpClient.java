@@ -24,16 +24,21 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.charset.Charset;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.conn.ClientConnectionManager;
+import org.apache.http.conn.ConnectTimeoutException;
 import org.apache.http.params.HttpParams;
 import org.apache.http.protocol.HTTP;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class DefaultPoolingHttpClient extends AbstractPoolingHttpClient {
 
     private static final String INVALID_URL = "Invalid URL ";
+    private static final int HTTP_STATUS_503 = 503;
+    private static final Logger LOG = LoggerFactory.getLogger(DefaultPoolingHttpClient.class);
     protected boolean randomUserAgent = false;
 
     public DefaultPoolingHttpClient() {
@@ -107,14 +112,14 @@ public class DefaultPoolingHttpClient extends AbstractPoolingHttpClient {
         }
 
         try {
-
-            final HttpResponse response = execute(httpGet);
-            if (response.getEntity() == null) {
-                throw new IOException("No response for URI " + httpGet.getURI());
-            }
-
-            return readContent(response, charset);
-
+            return readContent(execute(httpGet), charset);
+        } catch (ConnectTimeoutException cte) {
+            LOG.trace("Connection timed out", cte);
+            
+            httpGet.releaseConnection();
+            // a connect timeout should result in a 503 error
+            // to signal that the service is temporarily not available
+            return new DigestedResponse(HTTP_STATUS_503, StringUtils.EMPTY);
         } catch (IOException ioe) {
             httpGet.releaseConnection();
             throw ioe;
@@ -150,7 +155,6 @@ public class DefaultPoolingHttpClient extends AbstractPoolingHttpClient {
         if (randomUserAgent) {
             httpGet.setHeader(HTTP.USER_AGENT, UserAgentSelector.randomUserAgent());
         }
-        final HttpResponse response = execute(httpGet);
-        return response.getEntity();
+        return execute(httpGet).getEntity();
     }
 }

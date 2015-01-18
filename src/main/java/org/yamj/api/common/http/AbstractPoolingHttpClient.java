@@ -40,12 +40,9 @@ import org.apache.http.params.HttpProtocolParams;
 import org.apache.http.params.SyncBasicHttpParams;
 import org.apache.http.protocol.*;
 import org.apache.http.protocol.RequestExpectContinue;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public abstract class AbstractPoolingHttpClient extends AbstractHttpClient implements CommonHttpClient {
 
-    private static final Logger LOG = LoggerFactory.getLogger(AbstractPoolingHttpClient.class);
     // Default settings for the connections
     private static final int DEFAULT_TIMEOUT_CONNECTION = 25000;
     private static final int DEFAULT_TIMEOUT_SOCKET = 90000;
@@ -185,22 +182,14 @@ public abstract class AbstractPoolingHttpClient extends AbstractHttpClient imple
     }
 
     protected DigestedResponse readContent(final HttpResponse response, final Charset charset) throws IOException {
-        final StringWriter content = new StringWriter(SW_BUFFER_10K);
-        final InputStream is = response.getEntity().getContent();
-        InputStreamReader isr = null;
-        BufferedReader br = null;
-
         final DigestedResponse digestedResponse = new DigestedResponse();
         digestedResponse.setStatusCode(response.getStatusLine().getStatusCode());
 
-        try {
-            if (charset == null) {
-                isr = new InputStreamReader(is, Charset.defaultCharset());
-            } else {
-                isr = new InputStreamReader(is, charset);
-            }
-            br = new BufferedReader(isr);
-
+        try (StringWriter content = new StringWriter(SW_BUFFER_10K);
+             InputStream is = response.getEntity().getContent();
+             InputStreamReader isr = new InputStreamReader(is, (charset == null ? Charset.defaultCharset() : charset));
+             BufferedReader br = new BufferedReader(isr))
+        {
             String line = br.readLine();
             while (line != null) {
                 content.write(line);
@@ -210,31 +199,6 @@ public abstract class AbstractPoolingHttpClient extends AbstractHttpClient imple
             content.flush();
             digestedResponse.setContent(content.toString());
             return digestedResponse;
-        } finally {
-            if (br != null) {
-                try {
-                    br.close();
-                } catch (IOException ex) {
-                    LOG.trace("Failed to close BufferedReader", ex);
-                }
-            }
-            if (isr != null) {
-                try {
-                    isr.close();
-                } catch (IOException ex) {
-                    LOG.trace("Failed to close InputStreamReader", ex);
-                }
-            }
-            try {
-                content.close();
-            } catch (IOException ex) {
-                LOG.trace("Failed to close StringWriter", ex);
-            }
-            try {
-                is.close();
-            } catch (IOException ex) {
-                LOG.trace("Failed to close InputStream", ex);
-            }
         }
     }
 
