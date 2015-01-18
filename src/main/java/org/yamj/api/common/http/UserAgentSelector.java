@@ -25,11 +25,7 @@ import org.apache.commons.lang3.RandomUtils;
 
 public class UserAgentSelector {
 
-    private static final List<String> USER_AGENTS = new ArrayList<String>();
-
-    private UserAgentSelector() {
-        throw new UnsupportedOperationException("Class cannot be instantiated");
-    }
+    private static final List<String> USER_AGENTS = new ArrayList<>();
 
     static {
         USER_AGENTS.add("Mozilla/5.0 (Linux; U; Android {v}; fr-fr; Nexus One Build/FRF91) AppleWebKit/5{b}.{c} (KHTML, like Gecko) Version/{a}.{a} Mobile Safari/5{b}.{c}");
@@ -56,6 +52,18 @@ public class UserAgentSelector {
         USER_AGENTS.add("Mozilla/5.0 (Linux; U; Android {v}; fr-fr; LG-P5{b} Build/FRG83) AppleWebKit/533.1 (KHTML, like Gecko) Version/4.0 Mobile Safari/533.1");
     }
 
+    /**
+     * Class to hold a list of user agents that can be used
+     */
+    private UserAgentSelector() {
+        throw new UnsupportedOperationException("Class cannot be instantiated");
+    }
+
+    /**
+     * Get a random user agent to use for web requests
+     *
+     * @return
+     */
     public static String randomUserAgent() {
         final int i = RandomUtils.nextInt(0, USER_AGENTS.size());
         return USER_AGENTS.get(i);

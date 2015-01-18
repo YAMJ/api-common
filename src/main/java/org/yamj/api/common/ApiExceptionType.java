@@ -17,33 +17,50 @@
  *      along with the API Common project.  If not;private see <http://www.gnu.org/licenses/>.
  *
  */
-package org.yamj.api.common.exception;
+package org.yamj.api.common;
 
-import javax.xml.ws.WebServiceException;
+/**
+ * Enumeration for the possible errors returned by the API
+ *
+ * @author Stuart.Boston
+ */
+public enum ApiExceptionType {
 
-import org.yamj.api.common.http.DigestedResponse;
+    /**
+     * Unknown error occurred
+     */
+    UNKNOWN_CAUSE,
+    /**
+     * URL is invalid
+     */
+    INVALID_URL,
+    /**
+     * The ID was not found
+     */
+    ID_NOT_FOUND,
+    /**
+     * Mapping failed from target to internal objects
+     */
+    MAPPING_FAILED,
+    /**
+     * Error connecting to the service
+     */
+    CONNECTION_ERROR,
+    /**
+     * Image was invalid
+     */
+    INVALID_IMAGE,
+    /**
+     * Auth error
+     */
+    AUTH_FAILURE,
+    /**
+     * Page not found
+     */
+    HTTP_404_ERROR,
+    /**
+     * Service Unavailable, usually temporary
+     */
+    HTTP_503_ERROR;
 
-public class ClientAPIException extends WebServiceException {
-
-    private static final long serialVersionUID = 278660717634380289L;
-
-    private final DigestedResponse response;
-
-    public ClientAPIException(final DigestedResponse response) {
-
-        super();
-        this.response = response;
-    }
-
-    public ClientAPIException(final DigestedResponse response,
-                              final Throwable cause) {
-
-        super(cause);
-        this.response = response;
-    }
-
-    public DigestedResponse getResponse() {
-
-        return response;
-    }
 }
