@@ -20,6 +20,7 @@
 package org.yamj.api.common.http;
 
 import java.io.IOException;
+import java.net.SocketTimeoutException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -113,11 +114,11 @@ public class DefaultPoolingHttpClient extends AbstractPoolingHttpClient {
 
         try {
             return readContent(execute(httpGet), charset);
-        } catch (ConnectTimeoutException cte) {
-            LOG.trace("Connection timed out", cte);
+        } catch (ConnectTimeoutException | SocketTimeoutException ex) {
+            LOG.trace("Timeout exception", ex);
             
             httpGet.releaseConnection();
-            // a connect timeout should result in a 503 error
+            // a timeout should result in a 503 error
             // to signal that the service is temporarily not available
             return new DigestedResponse(HTTP_STATUS_503, StringUtils.EMPTY);
         } catch (IOException ioe) {
