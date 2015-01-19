@@ -185,21 +185,23 @@ public abstract class AbstractPoolingHttpClient extends AbstractHttpClient imple
         final DigestedResponse digestedResponse = new DigestedResponse();
         digestedResponse.setStatusCode(response.getStatusLine().getStatusCode());
 
-        try (StringWriter content = new StringWriter(SW_BUFFER_10K);
-             InputStream is = response.getEntity().getContent();
-             InputStreamReader isr = new InputStreamReader(is, (charset == null ? Charset.defaultCharset() : charset));
-             BufferedReader br = new BufferedReader(isr))
-        {
-            String line = br.readLine();
-            while (line != null) {
-                content.write(line);
-                line = br.readLine();
+        if (response.getEntity() != null) {
+            try (StringWriter content = new StringWriter(SW_BUFFER_10K);
+                 InputStream is = response.getEntity().getContent();
+                 InputStreamReader isr = new InputStreamReader(is, (charset == null ? Charset.defaultCharset() : charset));
+                 BufferedReader br = new BufferedReader(isr))
+            {
+                String line = br.readLine();
+                while (line != null) {
+                    content.write(line);
+                    line = br.readLine();
+                }
+    
+                content.flush();
+                digestedResponse.setContent(content.toString());
             }
-
-            content.flush();
-            digestedResponse.setContent(content.toString());
-            return digestedResponse;
         }
+        return digestedResponse;
     }
 
     public void setRoute(final HttpRoute httpRoute, final int maxRequests) {
