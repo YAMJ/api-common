@@ -19,12 +19,9 @@
  */
 package org.yamj.api.common.http;
 
-import java.io.*;
-import java.nio.charset.Charset;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.Consts;
 import org.apache.http.HttpHost;
-import org.apache.http.HttpResponse;
 import org.apache.http.HttpVersion;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
@@ -41,6 +38,7 @@ import org.apache.http.params.SyncBasicHttpParams;
 import org.apache.http.protocol.*;
 import org.apache.http.protocol.RequestExpectContinue;
 
+@Deprecated
 public abstract class AbstractPoolingHttpClient extends AbstractHttpClient implements CommonHttpClient {
 
     // Default settings for the connections
@@ -48,10 +46,7 @@ public abstract class AbstractPoolingHttpClient extends AbstractHttpClient imple
     private static final int DEFAULT_TIMEOUT_SOCKET = 90000;
     private static final int DEFAULT_CONN_ROUTE = 1;
     private static final int DEFAULT_CONN_MAX = 20;
-
-    // Buffer sizes
     private static final int SOCKET_BUFFER_8K = 8192;
-    private static final int SW_BUFFER_10K = 10240;
 
     // Variables
     private String proxyHost;
@@ -179,29 +174,6 @@ public abstract class AbstractPoolingHttpClient extends AbstractHttpClient imple
         clientManager.setDefaultMaxPerRoute(connectionsMaxPerRoute);
         clientManager.setMaxTotal(connectionsMaxTotal);
         return clientManager;
-    }
-
-    protected DigestedResponse readContent(final HttpResponse response, final Charset charset) throws IOException {
-        final DigestedResponse digestedResponse = new DigestedResponse();
-        digestedResponse.setStatusCode(response.getStatusLine().getStatusCode());
-
-        if (response.getEntity() != null) {
-            try (StringWriter content = new StringWriter(SW_BUFFER_10K);
-                 InputStream is = response.getEntity().getContent();
-                 InputStreamReader isr = new InputStreamReader(is, (charset == null ? Charset.defaultCharset() : charset));
-                 BufferedReader br = new BufferedReader(isr))
-            {
-                String line = br.readLine();
-                while (line != null) {
-                    content.write(line);
-                    line = br.readLine();
-                }
-    
-                content.flush();
-                digestedResponse.setContent(content.toString());
-            }
-        }
-        return digestedResponse;
     }
 
     public void setRoute(final HttpRoute httpRoute, final int maxRequests) {

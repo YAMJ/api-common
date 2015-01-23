@@ -23,11 +23,11 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URL;
 import java.nio.charset.Charset;
-
 import org.apache.http.HttpEntity;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 
+@Deprecated
 public interface CommonHttpClient extends HttpClient {
 
     void setProxy(String host, int port, String username, String password);
