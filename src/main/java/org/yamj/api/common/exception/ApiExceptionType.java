@@ -61,6 +61,9 @@ public enum ApiExceptionType {
     /**
      * Service Unavailable, usually temporary
      */
-    HTTP_503_ERROR;
-
+    HTTP_503_ERROR,
+    /**
+     * HTTP client is missing
+     */
+    HTTP_CLIENT_MISSING;
 }
