@@ -32,7 +32,7 @@ import org.slf4j.LoggerFactory;
 
 public class DigestedResponseReader {
 
-    private static final Logger LOG = LoggerFactory.getLogger(HttpClientWrapper.class);
+    private static final Logger LOG = LoggerFactory.getLogger(DigestedResponseReader.class);
     private static final int SW_BUFFER_10K = 10240;
     private static final int HTTP_STATUS_503 = 503;
 
