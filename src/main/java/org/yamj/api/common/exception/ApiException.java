@@ -88,7 +88,7 @@ public class ApiException extends Exception {
      * @param url The URL that cause the exception or is associated with it
      */
     public ApiException(final ApiExceptionType exceptionType, final String response, final int responseCode, final String url) {
-        super();
+        super("ExceptionType=" + exceptionType + ", ResponseCode=" + responseCode + ", URL=" + url);
         this.exceptionType = exceptionType;
         this.response = response;
         this.responseCode = responseCode;
@@ -142,7 +142,7 @@ public class ApiException extends Exception {
      * @param cause The underlying exception that was the cause of this API Exception
      */
     public ApiException(final ApiExceptionType exceptionType, final String response, final int responseCode, final String url, final Throwable cause) {
-        super(cause);
+        super("ExceptionType=" + exceptionType + ", ResponseCode=" + responseCode + ", URL=" + url, cause);
         this.exceptionType = exceptionType;
         this.response = response;
         this.responseCode = responseCode;
