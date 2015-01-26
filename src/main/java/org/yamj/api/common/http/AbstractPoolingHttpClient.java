@@ -74,6 +74,7 @@ public abstract class AbstractPoolingHttpClient extends AbstractHttpClient imple
         this.connectionsMaxTotal = DEFAULT_CONN_MAX;
     }
 
+    @Override
     public final void setProxy(final String host, final int port, final String username, final String password) {
         setProxyHost(host);
         setProxyPort(port);
@@ -97,6 +98,7 @@ public abstract class AbstractPoolingHttpClient extends AbstractHttpClient imple
         this.proxyPassword = proxyPassword;
     }
 
+    @Override
     public final void setTimeouts(final int connectionTimeout, final int socketTimeout) {
         setConnectionTimeout(connectionTimeout);
         setSocketTimeout(socketTimeout);

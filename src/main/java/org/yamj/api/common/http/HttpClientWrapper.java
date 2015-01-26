@@ -56,17 +56,21 @@ public class HttpClientWrapper implements CommonHttpClient, Closeable {
         this.randomUserAgent = randomUserAgent;
     }
 
+    @SuppressWarnings("unused")
     protected void prepareRequest(HttpUriRequest request) throws ClientProtocolException {
-        prepareRequest(determineTarget(request), request);
+        if (randomUserAgent) {
+            request.setHeader(HTTP.USER_AGENT, UserAgentSelector.randomUserAgent());
+        }
     }
 
-    protected void prepareRequest(HttpHost target, HttpRequest request) {
+    @SuppressWarnings("unused")
+    protected void prepareRequest(HttpHost target, HttpRequest request) throws ClientProtocolException {
         if (randomUserAgent) {
           request.setHeader(HTTP.USER_AGENT, UserAgentSelector.randomUserAgent());
         }
     }
 
-    private static HttpHost determineTarget(HttpUriRequest request) throws ClientProtocolException {
+    protected static HttpHost determineTarget(HttpUriRequest request) throws ClientProtocolException {
         HttpHost target = null;
         URI requestURI = request.getURI();
         if (requestURI.isAbsolute()) {
