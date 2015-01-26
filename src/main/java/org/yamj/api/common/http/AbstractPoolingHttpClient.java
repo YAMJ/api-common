@@ -74,49 +74,47 @@ public abstract class AbstractPoolingHttpClient extends AbstractHttpClient imple
         this.connectionsMaxTotal = DEFAULT_CONN_MAX;
     }
 
-    @Override
-    public void setProxy(final String host, final int port, final String username, final String password) {
+    public final void setProxy(final String host, final int port, final String username, final String password) {
         setProxyHost(host);
         setProxyPort(port);
         setProxyUsername(username);
         setProxyPassword(password);
     }
 
-    public void setProxyHost(final String proxyHost) {
+    public final void setProxyHost(final String proxyHost) {
         this.proxyHost = proxyHost;
     }
 
-    public void setProxyPort(final int proxyPort) {
+    public final void setProxyPort(final int proxyPort) {
         this.proxyPort = proxyPort;
     }
 
-    public void setProxyUsername(final String proxyUsername) {
+    public final void setProxyUsername(final String proxyUsername) {
         this.proxyUsername = proxyUsername;
     }
 
-    public void setProxyPassword(final String proxyPassword) {
+    public final void setProxyPassword(final String proxyPassword) {
         this.proxyPassword = proxyPassword;
     }
 
-    @Override
-    public void setTimeouts(final int connectionTimeout, final int socketTimeout) {
+    public final void setTimeouts(final int connectionTimeout, final int socketTimeout) {
         setConnectionTimeout(connectionTimeout);
         setSocketTimeout(socketTimeout);
     }
 
-    public void setConnectionTimeout(final int connectionTimeout) {
+    public final void setConnectionTimeout(final int connectionTimeout) {
         this.connectionTimeout = connectionTimeout;
     }
 
-    public void setSocketTimeout(final int socketTimeout) {
+    public final void setSocketTimeout(final int socketTimeout) {
         this.socketTimeout = socketTimeout;
     }
 
-    public void setConnectionsMaxPerRoute(final int connectionsMaxPerRoute) {
+    public final void setConnectionsMaxPerRoute(final int connectionsMaxPerRoute) {
         this.connectionsMaxPerRoute = connectionsMaxPerRoute;
     }
 
-    public void setConnectionsMaxTotal(final int connectionsMaxTotal) {
+    public final void setConnectionsMaxTotal(final int connectionsMaxTotal) {
         this.connectionsMaxTotal = connectionsMaxTotal;
     }
 

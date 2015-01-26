@@ -39,13 +39,12 @@ import org.apache.http.protocol.HTTP;
 import org.apache.http.protocol.HttpContext;
 
 @SuppressWarnings("deprecation")
-public class HttpClientWrapper implements HttpClient {
+public class HttpClientWrapper implements CommonHttpClient {
 
     private static final String INVALID_URL = "Invalid URL ";
 
-    private final HttpClient httpClient;
+    protected final HttpClient httpClient;
     protected boolean randomUserAgent = false;
-    
     
     public HttpClientWrapper(HttpClient httpCLient) {
         this.httpClient = httpCLient;
@@ -55,10 +54,24 @@ public class HttpClientWrapper implements HttpClient {
         this.randomUserAgent = randomUserAgent;
     }
 
+    @Override
+    @Deprecated
+    public void setProxy(String host, int port, String username, String password) {
+        // should be done by HTTP client builder
+    }
+
+    @Override
+    @Deprecated
+    public void setTimeouts(int connectionTimeout, int socketTimeout) {
+        // should be done by HTTP client builder
+    }
+    
+    @Override
     public DigestedResponse requestContent(URL url) throws IOException {
         return requestContent(url, null);
     }
   
+    @Override
     public DigestedResponse requestContent(URL url, Charset charset) throws IOException {
         URI uri;
         try {
@@ -70,37 +83,43 @@ public class HttpClientWrapper implements HttpClient {
         return requestContent(uri, charset);
     }
   
+    @Override
     public DigestedResponse requestContent(String uri) throws IOException {
         return requestContent(uri, null);
     }
   
+    @Override
     public DigestedResponse requestContent(String uri, Charset charset) throws IOException {
         final HttpGet httpGet = new HttpGet(uri);
         return requestContent(httpGet, charset);
     }
   
+    @Override
     public DigestedResponse requestContent(URI uri) throws IOException {
         return requestContent(uri, null);
     }
   
+    @Override
     public DigestedResponse requestContent(URI uri, Charset charset) throws IOException {
         final HttpGet httpGet = new HttpGet(uri);
         return requestContent(httpGet, charset);
     }
   
+    @Override
     public DigestedResponse requestContent(HttpGet httpGet) throws IOException {
         return requestContent(httpGet, null);
     }
   
+    @Override
     public DigestedResponse requestContent(HttpGet httpGet, Charset charset) throws IOException {
         if (randomUserAgent) {
             httpGet.setHeader(HTTP.USER_AGENT, UserAgentSelector.randomUserAgent());
         }
   
-        
         return DigestedResponseReader.requestContent(httpClient, httpGet, charset);
     }
   
+    @Override
     public HttpEntity requestResource(URL url) throws IOException {
         URI uri;
         try {
@@ -112,16 +131,19 @@ public class HttpClientWrapper implements HttpClient {
         return requestResource(uri);
     }
   
+    @Override
     public HttpEntity requestResource(String uri) throws IOException {
         final HttpGet httpGet = new HttpGet(uri);
         return requestResource(httpGet);
     }
   
+    @Override
     public HttpEntity requestResource(URI uri) throws IOException {
         final HttpGet httpGet = new HttpGet(uri);
         return requestResource(httpGet);
     }
   
+    @Override
     public HttpEntity requestResource(HttpGet httpGet) throws IOException {
         if (randomUserAgent) {
             httpGet.setHeader(HTTP.USER_AGENT, UserAgentSelector.randomUserAgent());

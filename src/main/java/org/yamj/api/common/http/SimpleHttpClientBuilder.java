@@ -30,7 +30,7 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.SystemDefaultCredentialsProvider;
 
-public class CommonHttpClientBuilder {
+public class SimpleHttpClientBuilder {
 
     private int maxConnTotal = 20;
     private int maxConnPerRoute = 1;

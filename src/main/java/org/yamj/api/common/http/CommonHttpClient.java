@@ -27,11 +27,12 @@ import org.apache.http.HttpEntity;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 
-@Deprecated
 public interface CommonHttpClient extends HttpClient {
 
+    @Deprecated
     void setProxy(String host, int port, String username, String password);
 
+    @Deprecated
     void setTimeouts(int connectionTimeout, int socketTimeout);
 
     DigestedResponse requestContent(URL url) throws IOException;
