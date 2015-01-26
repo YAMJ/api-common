@@ -52,7 +52,7 @@ public class DigestedResponseReader {
         }
     }
     
-    public static DigestedResponse readContent(final HttpResponse response, final Charset charset) throws IOException {
+    private static DigestedResponse readContent(final HttpResponse response, final Charset charset) throws IOException {
         final DigestedResponse digestedResponse = new DigestedResponse();
         digestedResponse.setStatusCode(response.getStatusLine().getStatusCode());
     

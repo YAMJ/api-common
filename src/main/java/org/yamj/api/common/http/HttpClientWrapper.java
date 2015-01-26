@@ -79,7 +79,6 @@ public class HttpClientWrapper implements CommonHttpClient {
         } catch (URISyntaxException ex) {
             throw new IllegalArgumentException(INVALID_URL + url, ex);
         }
-  
         return requestContent(uri, charset);
     }
   
@@ -115,7 +114,6 @@ public class HttpClientWrapper implements CommonHttpClient {
         if (randomUserAgent) {
             httpGet.setHeader(HTTP.USER_AGENT, UserAgentSelector.randomUserAgent());
         }
-  
         return DigestedResponseReader.requestContent(httpClient, httpGet, charset);
     }
   
@@ -127,7 +125,6 @@ public class HttpClientWrapper implements CommonHttpClient {
         } catch (URISyntaxException ex) {
             throw new IllegalArgumentException(INVALID_URL + url, ex);
         }
-  
         return requestResource(uri);
     }
   

@@ -69,7 +69,6 @@ public class DefaultPoolingHttpClient extends AbstractPoolingHttpClient {
         } catch (URISyntaxException ex) {
             throw new IllegalArgumentException(INVALID_URL + url, ex);
         }
-
         return requestContent(uri, charset);
     }
 
@@ -116,7 +115,6 @@ public class DefaultPoolingHttpClient extends AbstractPoolingHttpClient {
         } catch (URISyntaxException ex) {
             throw new IllegalArgumentException(INVALID_URL + url, ex);
         }
-
         return requestResource(uri);
     }
 
