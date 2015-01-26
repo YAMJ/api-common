@@ -20,12 +20,10 @@
 package org.yamj.api.common.http;
 
 import java.io.IOException;
-import java.net.SocketTimeoutException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.charset.Charset;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpHost;
 import org.apache.http.HttpRequest;
@@ -36,19 +34,14 @@ import org.apache.http.client.ResponseHandler;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.conn.ClientConnectionManager;
-import org.apache.http.conn.ConnectTimeoutException;
 import org.apache.http.params.HttpParams;
 import org.apache.http.protocol.HTTP;
 import org.apache.http.protocol.HttpContext;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 @SuppressWarnings("deprecation")
 public class HttpClientWrapper implements HttpClient {
 
     private static final String INVALID_URL = "Invalid URL ";
-    private static final int HTTP_STATUS_503 = 503;
-    private static final Logger LOG = LoggerFactory.getLogger(HttpClientWrapper.class);
 
     private final HttpClient httpClient;
     protected boolean randomUserAgent = false;
@@ -59,8 +52,8 @@ public class HttpClientWrapper implements HttpClient {
     }
     
     public final void setRandomUserAgent(boolean randomUserAgent) {
-      this.randomUserAgent = randomUserAgent;
-  }
+        this.randomUserAgent = randomUserAgent;
+    }
 
     public DigestedResponse requestContent(URL url) throws IOException {
         return requestContent(url, null);
@@ -104,19 +97,8 @@ public class HttpClientWrapper implements HttpClient {
             httpGet.setHeader(HTTP.USER_AGENT, UserAgentSelector.randomUserAgent());
         }
   
-        try {
-            return DigestedResponseReader.readContent(execute(httpGet), charset);
-        } catch (ConnectTimeoutException | SocketTimeoutException ex) {
-            LOG.trace("Timeout exception", ex);
-            
-            httpGet.releaseConnection();
-            // a timeout should result in a 503 error
-            // to signal that the service is temporarily not available
-            return new DigestedResponse(HTTP_STATUS_503, StringUtils.EMPTY);
-        } catch (IOException ioe) {
-            httpGet.releaseConnection();
-            throw ioe;
-        }
+        
+        return DigestedResponseReader.requestContent(httpClient, httpGet, charset);
     }
   
     public HttpEntity requestResource(URL url) throws IOException {

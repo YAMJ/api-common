@@ -20,27 +20,20 @@
 package org.yamj.api.common.http;
 
 import java.io.IOException;
-import java.net.SocketTimeoutException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.charset.Charset;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.conn.ClientConnectionManager;
-import org.apache.http.conn.ConnectTimeoutException;
 import org.apache.http.params.HttpParams;
 import org.apache.http.protocol.HTTP;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 @Deprecated
 public class DefaultPoolingHttpClient extends AbstractPoolingHttpClient {
 
     private static final String INVALID_URL = "Invalid URL ";
-    private static final int HTTP_STATUS_503 = 503;
-    private static final Logger LOG = LoggerFactory.getLogger(DefaultPoolingHttpClient.class);
     protected boolean randomUserAgent = false;
 
     public DefaultPoolingHttpClient() {
@@ -112,20 +105,7 @@ public class DefaultPoolingHttpClient extends AbstractPoolingHttpClient {
         if (randomUserAgent) {
             httpGet.setHeader(HTTP.USER_AGENT, UserAgentSelector.randomUserAgent());
         }
-
-        try {
-            return DigestedResponseReader.readContent(execute(httpGet), charset);
-        } catch (ConnectTimeoutException | SocketTimeoutException ex) {
-            LOG.trace("Timeout exception", ex);
-            
-            httpGet.releaseConnection();
-            // a timeout should result in a 503 error
-            // to signal that the service is temporarily not available
-            return new DigestedResponse(HTTP_STATUS_503, StringUtils.EMPTY);
-        } catch (IOException ioe) {
-            httpGet.releaseConnection();
-            throw ioe;
-        }
+        return DigestedResponseReader.requestContent(this, httpGet, charset);
     }
 
     @Override

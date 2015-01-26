@@ -20,17 +20,38 @@
 package org.yamj.api.common.http;
 
 import java.io.*;
+import java.net.SocketTimeoutException;
 import java.nio.charset.Charset;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.conn.ConnectTimeoutException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class DigestedResponseReader {
 
+    private static final Logger LOG = LoggerFactory.getLogger(HttpClientWrapper.class);
     private static final int SW_BUFFER_10K = 10240;
+    private static final int HTTP_STATUS_503 = 503;
 
-    private DigestedResponseReader() {
-        throw new UnsupportedOperationException("Class cannot be instantiated");
+    public static DigestedResponse requestContent(HttpClient httpClient, HttpGet httpGet, Charset charset) throws IOException {
+        try {
+            return readContent(httpClient.execute(httpGet), charset);
+        } catch (ConnectTimeoutException | SocketTimeoutException ex) {
+            LOG.trace("Timeout exception", ex);
+          
+            httpGet.releaseConnection();
+            // a timeout should result in a 503 error
+            // to signal that the service is temporarily not available
+            return new DigestedResponse(HTTP_STATUS_503, StringUtils.EMPTY);
+        } catch (IOException ioe) {
+            httpGet.releaseConnection();
+            throw ioe;
+        }
     }
-
+    
     public static DigestedResponse readContent(final HttpResponse response, final Charset charset) throws IOException {
         final DigestedResponse digestedResponse = new DigestedResponse();
         digestedResponse.setStatusCode(response.getStatusLine().getStatusCode());
