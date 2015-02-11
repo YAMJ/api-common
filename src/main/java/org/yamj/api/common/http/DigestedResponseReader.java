@@ -19,7 +19,11 @@
  */
 package org.yamj.api.common.http;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.StringWriter;
 import java.net.SocketTimeoutException;
 import java.nio.charset.Charset;
 import org.apache.commons.lang3.StringUtils;
@@ -41,7 +45,7 @@ public class DigestedResponseReader {
             return readContent(httpClient.execute(httpGet), charset);
         } catch (ConnectTimeoutException | SocketTimeoutException ex) {
             LOG.trace("Timeout exception", ex);
-          
+
             httpGet.releaseConnection();
             // a timeout should result in a 503 error
             // to signal that the service is temporarily not available
@@ -51,23 +55,22 @@ public class DigestedResponseReader {
             throw ioe;
         }
     }
-    
+
     private static DigestedResponse readContent(final HttpResponse response, final Charset charset) throws IOException {
         final DigestedResponse digestedResponse = new DigestedResponse();
         digestedResponse.setStatusCode(response.getStatusLine().getStatusCode());
-    
+
         if (response.getEntity() != null) {
             try (StringWriter content = new StringWriter(SW_BUFFER_10K);
-                 InputStream is = response.getEntity().getContent();
-                 InputStreamReader isr = new InputStreamReader(is, (charset == null ? Charset.defaultCharset() : charset));
-                 BufferedReader br = new BufferedReader(isr))
-            {
+                    InputStream is = response.getEntity().getContent();
+                    InputStreamReader isr = new InputStreamReader(is, (charset == null ? Charset.defaultCharset() : charset));
+                    BufferedReader br = new BufferedReader(isr)) {
                 String line = br.readLine();
                 while (line != null) {
                     content.write(line);
                     line = br.readLine();
                 }
-    
+
                 content.flush();
                 digestedResponse.setContent(content.toString());
             }

@@ -61,7 +61,8 @@ public class ApiException extends Exception {
      *
      * @param exceptionType The type of the exception to throw
      * @param response A response message associated with the exception
-     * @param responseCode A response code, such as the HTTP status from a web request
+     * @param responseCode A response code, such as the HTTP status from a web
+     * request
      * @param url The URL that cause the exception or is associated with it
      */
     public ApiException(final ApiExceptionType exceptionType, final String response, final int responseCode, final URL url) {
@@ -84,7 +85,8 @@ public class ApiException extends Exception {
      *
      * @param exceptionType The type of the exception to throw
      * @param response A response message associated with the exception
-     * @param responseCode A response code, such as the HTTP status from a web request
+     * @param responseCode A response code, such as the HTTP status from a web
+     * request
      * @param url The URL that cause the exception or is associated with it
      */
     public ApiException(final ApiExceptionType exceptionType, final String response, final int responseCode, final String url) {
@@ -101,7 +103,8 @@ public class ApiException extends Exception {
      * @param exceptionType The type of the exception to throw
      * @param response A response message associated with the exception
      * @param url The URL that cause the exception or is associated with it
-     * @param cause The underlying exception that was the cause of this API Exception
+     * @param cause The underlying exception that was the cause of this API
+     * Exception
      */
     public ApiException(final ApiExceptionType exceptionType, final String response, final URL url, final Throwable cause) {
         this(exceptionType, response, 0, url.toExternalForm(), cause);
@@ -112,9 +115,11 @@ public class ApiException extends Exception {
      *
      * @param exceptionType The type of the exception to throw
      * @param response A response message associated with the exception
-     * @param responseCode A response code, such as the HTTP status from a web request
+     * @param responseCode A response code, such as the HTTP status from a web
+     * request
      * @param url The URL that cause the exception or is associated with it
-     * @param cause The underlying exception that was the cause of this API Exception
+     * @param cause The underlying exception that was the cause of this API
+     * Exception
      */
     public ApiException(final ApiExceptionType exceptionType, final String response, final int responseCode, final URL url, final Throwable cause) {
         this(exceptionType, response, responseCode, url.toExternalForm(), cause);
@@ -126,7 +131,8 @@ public class ApiException extends Exception {
      * @param exceptionType The type of the exception to throw
      * @param response A response message associated with the exception
      * @param url The URL that cause the exception or is associated with it
-     * @param cause The underlying exception that was the cause of this API Exception
+     * @param cause The underlying exception that was the cause of this API
+     * Exception
      */
     public ApiException(final ApiExceptionType exceptionType, final String response, final String url, final Throwable cause) {
         this(exceptionType, response, 0, url, cause);
@@ -137,9 +143,11 @@ public class ApiException extends Exception {
      *
      * @param exceptionType The type of the exception to throw
      * @param response A response message associated with the exception
-     * @param responseCode A response code, such as the HTTP status from a web request
+     * @param responseCode A response code, such as the HTTP status from a web
+     * request
      * @param url The URL that cause the exception or is associated with it
-     * @param cause The underlying exception that was the cause of this API Exception
+     * @param cause The underlying exception that was the cause of this API
+     * Exception
      */
     public ApiException(final ApiExceptionType exceptionType, final String response, final int responseCode, final String url, final Throwable cause) {
         super("ExceptionType=" + exceptionType + ", ResponseCode=" + responseCode + ", URL=" + url, cause);

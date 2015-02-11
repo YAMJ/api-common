@@ -44,10 +44,10 @@ import org.apache.http.protocol.HttpContext;
 public class HttpClientWrapper implements CommonHttpClient, Closeable {
 
     private static final String INVALID_URL = "Invalid URL ";
-    
+
     private final HttpClient httpClient;
     private boolean randomUserAgent = false;
-    
+
     public HttpClientWrapper(HttpClient httpClient) {
         this.httpClient = httpClient;
     }
@@ -66,7 +66,7 @@ public class HttpClientWrapper implements CommonHttpClient, Closeable {
     @SuppressWarnings("unused")
     protected void prepareRequest(HttpHost target, HttpRequest request) throws ClientProtocolException {
         if (randomUserAgent) {
-          request.setHeader(HTTP.USER_AGENT, UserAgentSelector.randomUserAgent());
+            request.setHeader(HTTP.USER_AGENT, UserAgentSelector.randomUserAgent());
         }
     }
 
@@ -86,7 +86,7 @@ public class HttpClientWrapper implements CommonHttpClient, Closeable {
     public DigestedResponse requestContent(URL url) throws IOException {
         return requestContent(url, null);
     }
-  
+
     @Override
     public DigestedResponse requestContent(URL url, Charset charset) throws IOException {
         URI uri;
@@ -97,39 +97,39 @@ public class HttpClientWrapper implements CommonHttpClient, Closeable {
         }
         return requestContent(uri, charset);
     }
-  
+
     @Override
     public DigestedResponse requestContent(String uri) throws IOException {
         return requestContent(uri, null);
     }
-  
+
     @Override
     public DigestedResponse requestContent(String uri, Charset charset) throws IOException {
         final HttpGet httpGet = new HttpGet(uri);
         return requestContent(httpGet, charset);
     }
-  
+
     @Override
     public DigestedResponse requestContent(URI uri) throws IOException {
         return requestContent(uri, null);
     }
-  
+
     @Override
     public DigestedResponse requestContent(URI uri, Charset charset) throws IOException {
         final HttpGet httpGet = new HttpGet(uri);
         return requestContent(httpGet, charset);
     }
-  
+
     @Override
     public DigestedResponse requestContent(HttpGet httpGet) throws IOException {
         return requestContent(httpGet, null);
     }
-  
+
     @Override
     public DigestedResponse requestContent(HttpGet httpGet, Charset charset) throws IOException {
         return DigestedResponseReader.requestContent(this, httpGet, charset);
     }
-  
+
     @Override
     public HttpEntity requestResource(URL url) throws IOException {
         URI uri;
@@ -140,19 +140,19 @@ public class HttpClientWrapper implements CommonHttpClient, Closeable {
         }
         return requestResource(uri);
     }
-  
+
     @Override
     public HttpEntity requestResource(String uri) throws IOException {
         final HttpGet httpGet = new HttpGet(uri);
         return requestResource(httpGet);
     }
-  
+
     @Override
     public HttpEntity requestResource(URI uri) throws IOException {
         final HttpGet httpGet = new HttpGet(uri);
         return requestResource(httpGet);
     }
-  
+
     @Override
     public HttpEntity requestResource(HttpGet httpGet) throws IOException {
         return execute(httpGet).getEntity();
@@ -163,55 +163,55 @@ public class HttpClientWrapper implements CommonHttpClient, Closeable {
         prepareRequest(request);
         return httpClient.execute(request);
     }
-    
+
     @Override
     public HttpResponse execute(HttpUriRequest request, HttpContext context) throws IOException, ClientProtocolException {
         prepareRequest(request);
         return httpClient.execute(request, context);
     }
-    
+
     @Override
     public HttpResponse execute(HttpHost target, HttpRequest request) throws IOException, ClientProtocolException {
         prepareRequest(target, request);
         return httpClient.execute(target, request);
     }
-    
+
     @Override
     public <T> T execute(HttpUriRequest request, ResponseHandler<? extends T> responseHandler) throws IOException, ClientProtocolException {
         prepareRequest(request);
         return httpClient.execute(request, responseHandler);
     }
-    
+
     @Override
     public HttpResponse execute(HttpHost target, HttpRequest request, HttpContext context) throws IOException, ClientProtocolException {
         prepareRequest(target, request);
         return httpClient.execute(target, request, context);
     }
-    
+
     @Override
     public <T> T execute(HttpUriRequest request, ResponseHandler<? extends T> responseHandler, HttpContext context) throws IOException, ClientProtocolException {
         prepareRequest(request);
         return httpClient.execute(request, responseHandler, context);
     }
-    
+
     @Override
     public <T> T execute(HttpHost target, HttpRequest request, ResponseHandler<? extends T> responseHandler) throws IOException, ClientProtocolException {
         prepareRequest(target, request);
         return httpClient.execute(target, request, responseHandler);
     }
-    
+
     @Override
     public <T> T execute(HttpHost target, HttpRequest request, ResponseHandler<? extends T> responseHandler, HttpContext context) throws IOException, ClientProtocolException {
         prepareRequest(target, request);
         return httpClient.execute(target, request, responseHandler, context);
     }
-    
+
     @Override
     @Deprecated
     public ClientConnectionManager getConnectionManager() {
         return httpClient.getConnectionManager();
     }
-    
+
     @Override
     @Deprecated
     public HttpParams getParams() {
@@ -233,7 +233,7 @@ public class HttpClientWrapper implements CommonHttpClient, Closeable {
     @Override
     public void close() throws IOException {
         if (httpClient instanceof Closeable) {
-            ((Closeable)this.httpClient).close();
+            ((Closeable) this.httpClient).close();
         }
     }
 }

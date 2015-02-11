@@ -20,7 +20,8 @@
 package org.yamj.api.common.http;
 
 /**
- * Contains the content of the digested response stream body and its HTTP status code.
+ * Contains the content of the digested response stream body and its HTTP status
+ * code.
  */
 public class DigestedResponse {
 

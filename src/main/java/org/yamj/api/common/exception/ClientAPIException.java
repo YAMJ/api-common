@@ -20,7 +20,6 @@
 package org.yamj.api.common.exception;
 
 import javax.xml.ws.WebServiceException;
-
 import org.yamj.api.common.http.DigestedResponse;
 
 public class ClientAPIException extends WebServiceException {
@@ -36,7 +35,7 @@ public class ClientAPIException extends WebServiceException {
     }
 
     public ClientAPIException(final DigestedResponse response,
-                              final Throwable cause) {
+            final Throwable cause) {
 
         super(cause);
         this.response = response;
