@@ -30,6 +30,10 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.SystemDefaultCredentialsProvider;
 
+/**
+ * Builder class to create a CloseableHttpClient
+ *
+ */
 public class SimpleHttpClientBuilder {
 
     private int maxConnTotal = 20;
@@ -42,55 +46,136 @@ public class SimpleHttpClientBuilder {
     private int proxyPort = 0;
     private String proxyUsername;
     private String proxyPassword;
-  
-    public void setMaxConnTotal(int maxConnTotal) {
-        this.maxConnTotal = maxConnTotal;
-    }
-  
-    public void setMaxConnPerRoute(int maxConnPerRoute) {
-        this.maxConnPerRoute = maxConnPerRoute;
-    }
-  
-    public void setSystemProperties(boolean systemProperties) {
-        this.systemProperties = systemProperties;
-    }
-  
-    public void setConnectionRequestTimeout(int connectionRequestTimeout) {
-        this.connectionRequestTimeout = connectionRequestTimeout;
-    }
-  
-    public void setConnectTimeout(int connectTimeout) {
-        this.connectTimeout = connectTimeout;
-    }
-  
-    public void setSocketTimeout(int socketTimeout) {
-        this.socketTimeout = socketTimeout;
-    }
-  
-    public void setProxyHost(String proxyHost) {
-        this.proxyHost = proxyHost;
-    }
-  
-    public void setProxyPort(int proxyPort) {
-        this.proxyPort = proxyPort;
-    }
-  
-    public void setProxyUsername(String proxyUsername) {
-        this.proxyUsername = proxyUsername;
-    }
-  
-    public void setProxyPassword(String proxyPassword) {
-        this.proxyPassword = proxyPassword;
+
+    /**
+     * Create the SimpleHttpClientBuilder class
+     */
+    public SimpleHttpClientBuilder() {
     }
 
+    /**
+     * Set the maximum number of connections
+     *
+     * @param maxConnTotal
+     * @return
+     */
+    public SimpleHttpClientBuilder setMaxConnTotal(int maxConnTotal) {
+        this.maxConnTotal = maxConnTotal;
+        return this;
+    }
+
+    /**
+     * Set the maximum connections per route
+     *
+     * @param maxConnPerRoute
+     * @return
+     */
+    public SimpleHttpClientBuilder setMaxConnPerRoute(int maxConnPerRoute) {
+        this.maxConnPerRoute = maxConnPerRoute;
+        return this;
+    }
+
+    /**
+     * Use system properties or not
+     *
+     * @param systemProperties
+     * @return
+     */
+    public SimpleHttpClientBuilder setSystemProperties(boolean systemProperties) {
+        this.systemProperties = systemProperties;
+        return this;
+    }
+
+    /**
+     * Timeout for the connection request
+     *
+     * @param connectionRequestTimeout
+     * @return
+     */
+    public SimpleHttpClientBuilder setConnectionRequestTimeout(int connectionRequestTimeout) {
+        this.connectionRequestTimeout = connectionRequestTimeout;
+        return this;
+    }
+
+    /**
+     * Timeout for the connection
+     *
+     * @param connectTimeout
+     * @return
+     */
+    public SimpleHttpClientBuilder setConnectTimeout(int connectTimeout) {
+        this.connectTimeout = connectTimeout;
+        return this;
+    }
+
+    /**
+     * Timeout for the socket
+     *
+     * @param socketTimeout
+     * @return
+     */
+    public SimpleHttpClientBuilder setSocketTimeout(int socketTimeout) {
+        this.socketTimeout = socketTimeout;
+        return this;
+    }
+
+    /**
+     * Proxy host address
+     *
+     * @param proxyHost
+     * @return
+     */
+    public SimpleHttpClientBuilder setProxyHost(String proxyHost) {
+        this.proxyHost = proxyHost;
+        return this;
+    }
+
+    /**
+     * Proxy port
+     *
+     * @param proxyPort
+     * @return
+     */
+    public SimpleHttpClientBuilder setProxyPort(int proxyPort) {
+        this.proxyPort = proxyPort;
+        return this;
+    }
+
+    /**
+     * Proxy Username
+     *
+     * @param proxyUsername
+     * @return
+     */
+    public SimpleHttpClientBuilder setProxyUsername(String proxyUsername) {
+        this.proxyUsername = proxyUsername;
+        return this;
+    }
+
+    /**
+     * Proxy Password
+     *
+     * @param proxyPassword
+     * @return
+     */
+    public SimpleHttpClientBuilder setProxyPassword(String proxyPassword) {
+        this.proxyPassword = proxyPassword;
+        return this;
+    }
+
+    /**
+     * Create the CloseableHttpClient
+     *
+     * @return
+     */
     public CloseableHttpClient build() {
         // create proxy
         HttpHost proxy = null;
         CredentialsProvider credentialsProvider = null;
-        
+
         if (StringUtils.isNotBlank(proxyHost) && proxyPort > 0) {
             proxy = new HttpHost(proxyHost, proxyPort);
-          
+
             if (StringUtils.isNotBlank(proxyUsername) && StringUtils.isNotBlank(proxyPassword)) {
                 if (systemProperties) {
                     credentialsProvider = new SystemDefaultCredentialsProvider();
@@ -102,7 +187,7 @@ public class SimpleHttpClientBuilder {
                         new UsernamePasswordCredentials(proxyUsername, proxyPassword));
             }
         }
-      
+
         HttpClientBuilder builder = HttpClientBuilder.create()
                 .setMaxConnTotal(maxConnTotal)
                 .setMaxConnPerRoute(maxConnPerRoute)
@@ -114,7 +199,6 @@ public class SimpleHttpClientBuilder {
                         .setSocketTimeout(socketTimeout)
                         .setProxy(proxy)
                         .build());
-                
 
         // use system properties
         if (systemProperties) {
