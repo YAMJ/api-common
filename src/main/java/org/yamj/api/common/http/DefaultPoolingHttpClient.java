@@ -25,7 +25,9 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.charset.Charset;
 import org.apache.http.HttpEntity;
+import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
 import org.apache.http.conn.ClientConnectionManager;
 import org.apache.http.params.HttpParams;
 import org.apache.http.protocol.HTTP;
@@ -136,5 +138,69 @@ public class DefaultPoolingHttpClient extends AbstractPoolingHttpClient {
             httpGet.setHeader(HTTP.USER_AGENT, UserAgentSelector.randomUserAgent());
         }
         return execute(httpGet).getEntity();
+    }
+
+    @Override
+    public HttpEntity postResource(URL url, HttpEntity entity) throws IOException {
+        URI uri;
+        try {
+            uri = url.toURI();
+        } catch (URISyntaxException ex) {
+            throw new IllegalArgumentException(INVALID_URL + url, ex);
+        }
+        return postResource(uri, entity);
+    }
+
+    @Override
+    public HttpEntity postResource(String uri, HttpEntity entity) throws IOException {
+        final HttpPost httpPost = new HttpPost(uri);
+        httpPost.setEntity(entity);
+        return postResource(httpPost);
+    }
+
+    @Override
+    public HttpEntity postResource(URI uri, HttpEntity entity) throws IOException {
+        final HttpPost httpPost = new HttpPost(uri);
+        httpPost.setEntity(entity);
+        return postResource(httpPost);
+    }
+
+    @Override
+    public HttpEntity postResource(HttpPost httpPost) throws IOException {
+        if (randomUserAgent) {
+            httpPost.setHeader(HTTP.USER_AGENT, UserAgentSelector.randomUserAgent());
+        }
+        return execute(httpPost).getEntity();
+    }
+
+    @Override
+    public HttpEntity deleteResource(URL url) throws IOException {
+        URI uri;
+        try {
+            uri = url.toURI();
+        } catch (URISyntaxException ex) {
+            throw new IllegalArgumentException(INVALID_URL + url, ex);
+        }
+        return deleteResource(uri);
+    }
+
+    @Override
+    public HttpEntity deleteResource(String uri) throws IOException {
+        final HttpDelete httpDelete = new HttpDelete(uri);
+        return deleteResource(httpDelete);
+    }
+
+    @Override
+    public HttpEntity deleteResource(URI uri) throws IOException {
+        final HttpDelete httpDelete = new HttpDelete(uri);
+        return deleteResource(httpDelete);
+    }
+
+    @Override
+    public HttpEntity deleteResource(HttpDelete httpDelete) throws IOException {
+        if (randomUserAgent) {
+            httpDelete.setHeader(HTTP.USER_AGENT, UserAgentSelector.randomUserAgent());
+        }
+        return execute(httpDelete).getEntity();
     }
 }

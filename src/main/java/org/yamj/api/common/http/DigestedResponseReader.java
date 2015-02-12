@@ -19,11 +19,7 @@
  */
 package org.yamj.api.common.http;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.StringWriter;
+import java.io.*;
 import java.net.SocketTimeoutException;
 import java.nio.charset.Charset;
 import org.apache.commons.lang3.StringUtils;
@@ -32,6 +28,7 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.conn.ConnectTimeoutException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -55,19 +52,7 @@ public class DigestedResponseReader {
      * @throws IOException
      */
     public static DigestedResponse requestContent(HttpClient httpClient, HttpGet httpGet, Charset charset) throws IOException {
-        try {
-            return processContent(httpClient.execute(httpGet), charset);
-        } catch (ConnectTimeoutException | SocketTimeoutException ex) {
-            LOG.trace("Timeout exception", ex);
-
-            httpGet.releaseConnection();
-            // a timeout should result in a 503 error
-            // to signal that the service is temporarily not available
-            return new DigestedResponse(HTTP_STATUS_503, StringUtils.EMPTY);
-        } catch (IOException ioe) {
-            httpGet.releaseConnection();
-            throw ioe;
-        }
+        return processRequest(httpClient, httpGet, charset);
     }
 
     /**
@@ -80,19 +65,7 @@ public class DigestedResponseReader {
      * @throws IOException
      */
     public static DigestedResponse deleteContent(HttpClient httpClient, HttpDelete httpDelete, Charset charset) throws IOException {
-        try {
-            return processContent(httpClient.execute(httpDelete), charset);
-        } catch (ConnectTimeoutException | SocketTimeoutException ex) {
-            LOG.trace("Timeout exception", ex);
-
-            httpDelete.releaseConnection();
-            // a timeout should result in a 503 error
-            // to signal that the service is temporarily not available
-            return new DigestedResponse(HTTP_STATUS_503, StringUtils.EMPTY);
-        } catch (IOException ioe) {
-            httpDelete.releaseConnection();
-            throw ioe;
-        }
+        return processRequest(httpClient, httpDelete, charset);
     }
 
     /**
@@ -105,48 +78,51 @@ public class DigestedResponseReader {
      * @throws IOException
      */
     public static DigestedResponse postContent(HttpClient httpClient, HttpPost httpPost, Charset charset) throws IOException {
-        try {
-            return processContent(httpClient.execute(httpPost), charset);
-        } catch (ConnectTimeoutException | SocketTimeoutException ex) {
-            LOG.trace("Timeout exception", ex);
-
-            httpPost.releaseConnection();
-            // a timeout should result in a 503 error
-            // to signal that the service is temporarily not available
-            return new DigestedResponse(HTTP_STATUS_503, StringUtils.EMPTY);
-        } catch (IOException ioe) {
-            httpPost.releaseConnection();
-            throw ioe;
-        }
+        return processRequest(httpClient, httpPost, charset);
     }
 
     /**
      * Process the response and return the content
-     *
-     * @param response
+     * 
+     * @param httpClient
+     * @param httpRequest
      * @param charset
      * @return
      * @throws IOException
      */
-    private static DigestedResponse processContent(final HttpResponse response, final Charset charset) throws IOException {
-        final DigestedResponse digestedResponse = new DigestedResponse();
-        digestedResponse.setStatusCode(response.getStatusLine().getStatusCode());
+    private static DigestedResponse processRequest(HttpClient httpClient, HttpRequestBase httpRequest, Charset charset) throws IOException {
+        try {
+          final HttpResponse response = httpClient.execute(httpRequest);
+          final DigestedResponse digestedResponse = new DigestedResponse();
+          digestedResponse.setStatusCode(response.getStatusLine().getStatusCode());
 
-        if (response.getEntity() != null) {
-            try (StringWriter content = new StringWriter(SW_BUFFER_10K);
-                    InputStream is = response.getEntity().getContent();
-                    InputStreamReader isr = new InputStreamReader(is, (charset == null ? Charset.defaultCharset() : charset));
-                    BufferedReader br = new BufferedReader(isr)) {
-                String line = br.readLine();
-                while (line != null) {
-                    content.write(line);
-                    line = br.readLine();
-                }
+          if (response.getEntity() != null) {
+              try (StringWriter content = new StringWriter(SW_BUFFER_10K);
+                      InputStream is = response.getEntity().getContent();
+                      InputStreamReader isr = new InputStreamReader(is, (charset == null ? Charset.defaultCharset() : charset));
+                      BufferedReader br = new BufferedReader(isr)) {
+                  String line = br.readLine();
+                  while (line != null) {
+                      content.write(line);
+                      line = br.readLine();
+                  }
 
-                content.flush();
-                digestedResponse.setContent(content.toString());
-            }
+                  content.flush();
+                  digestedResponse.setContent(content.toString());
+              }
+          }
+          
+          return digestedResponse;
+        } catch (ConnectTimeoutException | SocketTimeoutException ex) {
+            LOG.trace("Timeout exception", ex);
+            httpRequest.releaseConnection();
+            
+            // a timeout should result in a 503 error
+            // to signal that the service is temporarily not available
+            return new DigestedResponse(HTTP_STATUS_503, StringUtils.EMPTY);
+        } catch (IOException ioe) {
+            httpRequest.releaseConnection();
+            throw ioe;
         }
-        return digestedResponse;
     }
 }

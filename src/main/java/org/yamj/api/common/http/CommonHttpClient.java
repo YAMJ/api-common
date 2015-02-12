@@ -25,7 +25,9 @@ import java.net.URL;
 import java.nio.charset.Charset;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
 
 public interface CommonHttpClient extends HttpClient {
 
@@ -58,4 +60,20 @@ public interface CommonHttpClient extends HttpClient {
     HttpEntity requestResource(URI uri) throws IOException;
 
     HttpEntity requestResource(HttpGet httpGet) throws IOException;
+
+    HttpEntity postResource(URL url, HttpEntity entity) throws IOException;
+
+    HttpEntity postResource(String uri, HttpEntity entity) throws IOException;
+
+    HttpEntity postResource(URI uri, HttpEntity entity) throws IOException;
+
+    HttpEntity postResource(HttpPost httpPost) throws IOException;
+
+    HttpEntity deleteResource(URL url) throws IOException;
+
+    HttpEntity deleteResource(String uri) throws IOException;
+
+    HttpEntity deleteResource(URI uri) throws IOException;
+
+    HttpEntity deleteResource(HttpDelete httpDelete) throws IOException;
 }
