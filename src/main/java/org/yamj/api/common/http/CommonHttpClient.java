@@ -53,6 +53,38 @@ public interface CommonHttpClient extends HttpClient {
 
     DigestedResponse requestContent(HttpGet httpGet, Charset charset) throws IOException;
 
+    DigestedResponse postContent(URL url, HttpEntity entity) throws IOException;
+
+    DigestedResponse postContent(URL url, HttpEntity entity,  Charset charset) throws IOException;
+
+    DigestedResponse postContent(String uri, HttpEntity entity) throws IOException;
+
+    DigestedResponse postContent(String uri, HttpEntity entity, Charset charset) throws IOException;
+
+    DigestedResponse postContent(URI uri, HttpEntity entity) throws IOException;
+
+    DigestedResponse postContent(URI uri, HttpEntity entity, Charset charset) throws IOException;
+
+    DigestedResponse postContent(HttpPost httpPost) throws IOException;
+
+    DigestedResponse postContent(HttpPost httpPost, Charset charset) throws IOException;
+
+    DigestedResponse deleteContent(URL url) throws IOException;
+
+    DigestedResponse deleteContent(URL url, Charset charset) throws IOException;
+
+    DigestedResponse deleteContent(String uri) throws IOException;
+
+    DigestedResponse deleteContent(String uri, Charset charset) throws IOException;
+
+    DigestedResponse deleteContent(URI uri) throws IOException;
+
+    DigestedResponse deleteContent(URI uri, Charset charset) throws IOException;
+
+    DigestedResponse deleteContent(HttpDelete httpDelete) throws IOException;
+
+    DigestedResponse deleteContent(HttpDelete httpDelete, Charset charset) throws IOException;
+
     HttpEntity requestResource(URL url) throws IOException;
 
     HttpEntity requestResource(String uri) throws IOException;

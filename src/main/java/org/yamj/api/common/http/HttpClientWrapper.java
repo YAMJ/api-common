@@ -45,8 +45,6 @@ import org.apache.http.protocol.HttpContext;
 @SuppressWarnings("deprecation")
 public class HttpClientWrapper implements CommonHttpClient, Closeable {
 
-    private static final String INVALID_URL = "Invalid URL ";
-
     private final HttpClient httpClient;
     private boolean randomUserAgent = false;
 
@@ -91,13 +89,7 @@ public class HttpClientWrapper implements CommonHttpClient, Closeable {
 
     @Override
     public DigestedResponse requestContent(URL url, Charset charset) throws IOException {
-        URI uri;
-        try {
-            uri = url.toURI();
-        } catch (URISyntaxException ex) {
-            throw new IllegalArgumentException(INVALID_URL + url, ex);
-        }
-        return requestContent(uri, charset);
+        return requestContent(toURI(url), charset);
     }
 
     @Override
@@ -133,14 +125,94 @@ public class HttpClientWrapper implements CommonHttpClient, Closeable {
     }
 
     @Override
+    public DigestedResponse postContent(URL url, HttpEntity entity) throws IOException {
+        return postContent(url, entity, null);
+    }
+
+    @Override
+    public DigestedResponse postContent(URL url, HttpEntity entity, Charset charset) throws IOException {
+        return postContent(toURI(url), entity, charset);
+    }
+
+    @Override
+    public DigestedResponse postContent(String uri, HttpEntity entity) throws IOException {
+        return postContent(uri, entity, null);
+    }
+
+    @Override
+    public DigestedResponse postContent(String uri, HttpEntity entity, Charset charset) throws IOException {
+        final HttpPost httpPost = new HttpPost(uri);
+        httpPost.setEntity(entity);
+        return postContent(httpPost, charset);
+    }
+
+    @Override
+    public DigestedResponse postContent(URI uri, HttpEntity entity) throws IOException {
+        return postContent(uri, entity, null);
+    }
+
+    @Override
+    public DigestedResponse postContent(URI uri, HttpEntity entity, Charset charset) throws IOException {
+        final HttpPost httpPost = new HttpPost(uri);
+        httpPost.setEntity(entity);
+        return postContent(httpPost, charset);
+    }
+
+    @Override
+    public DigestedResponse postContent(HttpPost httpPost) throws IOException {
+        return postContent(httpPost, null);
+    }
+
+    @Override
+    public DigestedResponse postContent(HttpPost httpPost, Charset charset) throws IOException {
+        return DigestedResponseReader.postContent(this, httpPost, charset);
+    }
+
+    @Override
+    public DigestedResponse deleteContent(URL url) throws IOException {
+        return deleteContent(url, null);
+    }
+
+    @Override
+    public DigestedResponse deleteContent(URL url, Charset charset) throws IOException {
+        return deleteContent(toURI(url), charset);
+    }
+
+    @Override
+    public DigestedResponse deleteContent(String uri) throws IOException {
+        return deleteContent(uri, null);
+    }
+
+    @Override
+    public DigestedResponse deleteContent(String uri, Charset charset) throws IOException {
+        final HttpDelete httpDelete = new HttpDelete(uri);
+        return deleteContent(httpDelete, charset);
+    }
+
+    @Override
+    public DigestedResponse deleteContent(URI uri) throws IOException {
+        return deleteContent(uri, null);
+    }
+
+    @Override
+    public DigestedResponse deleteContent(URI uri, Charset charset) throws IOException {
+        final HttpDelete httpDelete = new HttpDelete(uri);
+        return deleteContent(httpDelete, charset);
+    }
+
+    @Override
+    public DigestedResponse deleteContent(HttpDelete httpDelete) throws IOException {
+        return deleteContent(httpDelete, null);
+    }
+
+    @Override
+    public DigestedResponse deleteContent(HttpDelete httpDelete, Charset charset) throws IOException {
+        return DigestedResponseReader.deleteContent(this, httpDelete, charset);
+    }
+    
+    @Override
     public HttpEntity requestResource(URL url) throws IOException {
-        URI uri;
-        try {
-            uri = url.toURI();
-        } catch (URISyntaxException ex) {
-            throw new IllegalArgumentException(INVALID_URL + url, ex);
-        }
-        return requestResource(uri);
+        return requestResource(toURI(url));
     }
 
     @Override
@@ -162,13 +234,7 @@ public class HttpClientWrapper implements CommonHttpClient, Closeable {
 
     @Override
     public HttpEntity postResource(URL url, HttpEntity entity) throws IOException {
-        URI uri;
-        try {
-            uri = url.toURI();
-        } catch (URISyntaxException ex) {
-            throw new IllegalArgumentException(INVALID_URL + url, ex);
-        }
-        return postResource(uri, entity);
+        return postResource(toURI(url), entity);
     }
 
     @Override
@@ -192,13 +258,7 @@ public class HttpClientWrapper implements CommonHttpClient, Closeable {
 
     @Override
     public HttpEntity deleteResource(URL url) throws IOException {
-        URI uri;
-        try {
-            uri = url.toURI();
-        } catch (URISyntaxException ex) {
-            throw new IllegalArgumentException(INVALID_URL + url, ex);
-        }
-        return deleteResource(uri);
+        return deleteResource(toURI(url));
     }
 
     @Override
@@ -294,6 +354,14 @@ public class HttpClientWrapper implements CommonHttpClient, Closeable {
     public void close() throws IOException {
         if (httpClient instanceof Closeable) {
             ((Closeable) this.httpClient).close();
+        }
+    }
+    
+    protected static URI toURI(URL url) {
+        try {
+            return url.toURI();
+        } catch (URISyntaxException ex) {
+            throw new IllegalArgumentException("Invalid URL: " + url, ex);
         }
     }
 }

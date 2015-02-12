@@ -28,6 +28,7 @@ import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.conn.ClientConnectionManager;
 import org.apache.http.params.HttpParams;
 import org.apache.http.protocol.HTTP;
@@ -35,7 +36,6 @@ import org.apache.http.protocol.HTTP;
 @Deprecated
 public class DefaultPoolingHttpClient extends AbstractPoolingHttpClient {
 
-    private static final String INVALID_URL = "Invalid URL ";
     protected boolean randomUserAgent = false;
 
     public DefaultPoolingHttpClient() {
@@ -65,13 +65,7 @@ public class DefaultPoolingHttpClient extends AbstractPoolingHttpClient {
 
     @Override
     public DigestedResponse requestContent(URL url, Charset charset) throws IOException {
-        URI uri;
-        try {
-            uri = url.toURI();
-        } catch (URISyntaxException ex) {
-            throw new IllegalArgumentException(INVALID_URL + url, ex);
-        }
-        return requestContent(uri, charset);
+        return requestContent(toURI(url), charset);
     }
 
     @Override
@@ -103,21 +97,101 @@ public class DefaultPoolingHttpClient extends AbstractPoolingHttpClient {
 
     @Override
     public DigestedResponse requestContent(HttpGet httpGet, Charset charset) throws IOException {
-        if (randomUserAgent) {
-            httpGet.setHeader(HTTP.USER_AGENT, UserAgentSelector.randomUserAgent());
-        }
+        prepareRequest(httpGet);
         return DigestedResponseReader.requestContent(this, httpGet, charset);
     }
 
     @Override
+    public DigestedResponse postContent(URL url, HttpEntity entity) throws IOException {
+        return postContent(url, entity, null);
+    }
+
+    @Override
+    public DigestedResponse postContent(URL url, HttpEntity entity, Charset charset) throws IOException {
+        return postContent(toURI(url), entity, charset);
+    }
+
+    @Override
+    public DigestedResponse postContent(String uri, HttpEntity entity) throws IOException {
+        return postContent(uri, entity, null);
+    }
+
+    @Override
+    public DigestedResponse postContent(String uri, HttpEntity entity, Charset charset) throws IOException {
+        final HttpPost httpPost = new HttpPost(uri);
+        httpPost.setEntity(entity);
+        return postContent(httpPost, charset);
+    }
+
+    @Override
+    public DigestedResponse postContent(URI uri, HttpEntity entity) throws IOException {
+        return postContent(uri, entity, null);
+    }
+
+    @Override
+    public DigestedResponse postContent(URI uri, HttpEntity entity, Charset charset) throws IOException {
+        final HttpPost httpPost = new HttpPost(uri);
+        httpPost.setEntity(entity);
+        return postContent(httpPost, charset);
+    }
+
+    @Override
+    public DigestedResponse postContent(HttpPost httpPost) throws IOException {
+        return postContent(httpPost, null);
+    }
+
+    @Override
+    public DigestedResponse postContent(HttpPost httpPost, Charset charset) throws IOException {
+        prepareRequest(httpPost);
+        return DigestedResponseReader.postContent(this, httpPost, charset);
+    }
+
+    @Override
+    public DigestedResponse deleteContent(URL url) throws IOException {
+        return deleteContent(url, null);
+    }
+
+    @Override
+    public DigestedResponse deleteContent(URL url, Charset charset) throws IOException {
+        return deleteContent(toURI(url), charset);
+    }
+
+    @Override
+    public DigestedResponse deleteContent(String uri) throws IOException {
+        return deleteContent(uri, null);
+    }
+
+    @Override
+    public DigestedResponse deleteContent(String uri, Charset charset) throws IOException {
+        final HttpDelete httpDelete = new HttpDelete(uri);
+        return deleteContent(httpDelete, charset);
+    }
+
+    @Override
+    public DigestedResponse deleteContent(URI uri) throws IOException {
+        return deleteContent(uri, null);
+    }
+
+    @Override
+    public DigestedResponse deleteContent(URI uri, Charset charset) throws IOException {
+        final HttpDelete httpDelete = new HttpDelete(uri);
+        return deleteContent(httpDelete, charset);
+    }
+
+    @Override
+    public DigestedResponse deleteContent(HttpDelete httpDelete) throws IOException {
+        return deleteContent(httpDelete, null);
+    }
+
+    @Override
+    public DigestedResponse deleteContent(HttpDelete httpDelete, Charset charset) throws IOException {
+        prepareRequest(httpDelete);
+        return DigestedResponseReader.deleteContent(this, httpDelete, charset);
+    }
+
+    @Override
     public HttpEntity requestResource(URL url) throws IOException {
-        URI uri;
-        try {
-            uri = url.toURI();
-        } catch (URISyntaxException ex) {
-            throw new IllegalArgumentException(INVALID_URL + url, ex);
-        }
-        return requestResource(uri);
+        return requestResource(toURI(url));
     }
 
     @Override
@@ -134,21 +208,13 @@ public class DefaultPoolingHttpClient extends AbstractPoolingHttpClient {
 
     @Override
     public HttpEntity requestResource(HttpGet httpGet) throws IOException {
-        if (randomUserAgent) {
-            httpGet.setHeader(HTTP.USER_AGENT, UserAgentSelector.randomUserAgent());
-        }
+        prepareRequest(httpGet);
         return execute(httpGet).getEntity();
     }
 
     @Override
     public HttpEntity postResource(URL url, HttpEntity entity) throws IOException {
-        URI uri;
-        try {
-            uri = url.toURI();
-        } catch (URISyntaxException ex) {
-            throw new IllegalArgumentException(INVALID_URL + url, ex);
-        }
-        return postResource(uri, entity);
+        return postResource(toURI(url), entity);
     }
 
     @Override
@@ -167,21 +233,13 @@ public class DefaultPoolingHttpClient extends AbstractPoolingHttpClient {
 
     @Override
     public HttpEntity postResource(HttpPost httpPost) throws IOException {
-        if (randomUserAgent) {
-            httpPost.setHeader(HTTP.USER_AGENT, UserAgentSelector.randomUserAgent());
-        }
+        prepareRequest(httpPost);
         return execute(httpPost).getEntity();
     }
 
     @Override
     public HttpEntity deleteResource(URL url) throws IOException {
-        URI uri;
-        try {
-            uri = url.toURI();
-        } catch (URISyntaxException ex) {
-            throw new IllegalArgumentException(INVALID_URL + url, ex);
-        }
-        return deleteResource(uri);
+        return deleteResource(toURI(url));
     }
 
     @Override
@@ -198,9 +256,21 @@ public class DefaultPoolingHttpClient extends AbstractPoolingHttpClient {
 
     @Override
     public HttpEntity deleteResource(HttpDelete httpDelete) throws IOException {
-        if (randomUserAgent) {
-            httpDelete.setHeader(HTTP.USER_AGENT, UserAgentSelector.randomUserAgent());
-        }
+        prepareRequest(httpDelete);
         return execute(httpDelete).getEntity();
+    }
+
+    protected void prepareRequest(HttpRequestBase request) {
+        if (randomUserAgent) {
+            request.setHeader(HTTP.USER_AGENT, UserAgentSelector.randomUserAgent());
+        }
+    }
+    
+    protected static URI toURI(URL url) {
+        try {
+            return url.toURI();
+        } catch (URISyntaxException ex) {
+            throw new IllegalArgumentException("Invalid URL: " + url, ex);
+        }
     }
 }
