@@ -29,20 +29,16 @@ public class ClientAPIException extends WebServiceException {
     private final DigestedResponse response;
 
     public ClientAPIException(final DigestedResponse response) {
-
         super();
         this.response = response;
     }
 
-    public ClientAPIException(final DigestedResponse response,
-            final Throwable cause) {
-
+    public ClientAPIException(final DigestedResponse response, final Throwable cause) {
         super(cause);
         this.response = response;
     }
 
     public DigestedResponse getResponse() {
-
         return response;
     }
 }

@@ -209,7 +209,7 @@ public class HttpClientWrapper implements CommonHttpClient, Closeable {
     public DigestedResponse deleteContent(HttpDelete httpDelete, Charset charset) throws IOException {
         return DigestedResponseReader.deleteContent(this, httpDelete, charset);
     }
-    
+
     @Override
     public HttpEntity requestResource(URL url) throws IOException {
         return requestResource(toURI(url));
@@ -277,21 +277,21 @@ public class HttpClientWrapper implements CommonHttpClient, Closeable {
     public HttpEntity deleteResource(HttpDelete httpDelete) throws IOException {
         return execute(httpDelete).getEntity();
     }
-    
+
     @Override
-    public HttpResponse execute(HttpUriRequest request) throws IOException, ClientProtocolException {
+    public HttpResponse execute(HttpUriRequest request) throws IOException {
         prepareRequest(request);
         return httpClient.execute(request);
     }
 
     @Override
-    public HttpResponse execute(HttpUriRequest request, HttpContext context) throws IOException, ClientProtocolException {
+    public HttpResponse execute(HttpUriRequest request, HttpContext context) throws IOException {
         prepareRequest(request);
         return httpClient.execute(request, context);
     }
 
     @Override
-    public HttpResponse execute(HttpHost target, HttpRequest request) throws IOException, ClientProtocolException {
+    public HttpResponse execute(HttpHost target, HttpRequest request) throws IOException {
         prepareRequest(target, request);
         return httpClient.execute(target, request);
     }
@@ -303,7 +303,7 @@ public class HttpClientWrapper implements CommonHttpClient, Closeable {
     }
 
     @Override
-    public HttpResponse execute(HttpHost target, HttpRequest request, HttpContext context) throws IOException, ClientProtocolException {
+    public HttpResponse execute(HttpHost target, HttpRequest request, HttpContext context) throws IOException {
         prepareRequest(target, request);
         return httpClient.execute(target, request, context);
     }
@@ -326,8 +326,8 @@ public class HttpClientWrapper implements CommonHttpClient, Closeable {
         return httpClient.execute(target, request, responseHandler, context);
     }
 
-    @Override
     @Deprecated
+    @Override
     public ClientConnectionManager getConnectionManager() {
         return httpClient.getConnectionManager();
     }
@@ -339,24 +339,12 @@ public class HttpClientWrapper implements CommonHttpClient, Closeable {
     }
 
     @Override
-    @Deprecated
-    public void setProxy(String host, int port, String username, String password) {
-        // must be done by HTTP client builder
-    }
-
-    @Override
-    @Deprecated
-    public void setTimeouts(int connectionTimeout, int socketTimeout) {
-        // must be done by HTTP client builder
-    }
-
-    @Override
     public void close() throws IOException {
         if (httpClient instanceof Closeable) {
             ((Closeable) this.httpClient).close();
         }
     }
-    
+
     protected static URI toURI(URL url) {
         try {
             return url.toURI();

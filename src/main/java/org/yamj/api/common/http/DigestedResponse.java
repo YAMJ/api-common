@@ -19,11 +19,14 @@
  */
 package org.yamj.api.common.http;
 
+import java.io.Serializable;
+
 /**
- * Contains the content of the digested response stream body and its HTTP status
- * code.
+ * Contains the content of the digested response stream body and its HTTP status code.
  */
-public class DigestedResponse {
+public class DigestedResponse implements Serializable {
+
+    private static final long serialVersionUID = 2L;
 
     private int statusCode;
     private String content;

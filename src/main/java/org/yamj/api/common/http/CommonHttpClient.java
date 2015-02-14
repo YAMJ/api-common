@@ -31,12 +31,6 @@ import org.apache.http.client.methods.HttpPost;
 
 public interface CommonHttpClient extends HttpClient {
 
-    @Deprecated
-    void setProxy(String host, int port, String username, String password);
-
-    @Deprecated
-    void setTimeouts(int connectionTimeout, int socketTimeout);
-
     DigestedResponse requestContent(URL url) throws IOException;
 
     DigestedResponse requestContent(URL url, Charset charset) throws IOException;
