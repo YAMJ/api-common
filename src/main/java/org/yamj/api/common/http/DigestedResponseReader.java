@@ -101,19 +101,7 @@ public class DigestedResponseReader {
             digestedResponse.setStatusCode(response.getStatusLine().getStatusCode());
 
             if (response.getEntity() != null) {
-                try (StringWriter content = new StringWriter(SW_BUFFER_10K);
-                        InputStream is = response.getEntity().getContent();
-                        InputStreamReader isr = new InputStreamReader(is, charset == null ? Charset.defaultCharset() : charset);
-                        BufferedReader br = new BufferedReader(isr)) {
-                    String line = br.readLine();
-                    while (line != null) {
-                        content.write(line);
-                        line = br.readLine();
-                    }
-
-                    content.flush();
-                    digestedResponse.setContent(content.toString());
-                }
+                digestedResponse.setContent(getContent(response, charset));
             }
 
             return digestedResponse;
@@ -124,9 +112,33 @@ public class DigestedResponseReader {
             // a timeout should result in a 503 error
             // to signal that the service is temporarily not available
             return new DigestedResponse(HTTP_STATUS_503, StringUtils.EMPTY);
-        } catch (IOException ioe) {
+        } catch (IOException ex) {
             httpRequest.releaseConnection();
-            throw ioe;
+            throw ex;
+        }
+    }
+
+    /**
+     * Get the content from the response
+     *
+     * @param response
+     * @param charset
+     * @return
+     * @throws IOException
+     */
+    private static String getContent(HttpResponse response, Charset charset) throws IOException {
+        try (StringWriter content = new StringWriter(SW_BUFFER_10K);
+                InputStream is = response.getEntity().getContent();
+                InputStreamReader isr = new InputStreamReader(is, charset == null ? Charset.defaultCharset() : charset);
+                BufferedReader br = new BufferedReader(isr)) {
+            String line = br.readLine();
+            while (line != null) {
+                content.write(line);
+                line = br.readLine();
+            }
+
+            content.flush();
+            return content.toString();
         }
     }
 }
