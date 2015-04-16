@@ -19,7 +19,6 @@
  */
 package org.yamj.api.common.http;
 
-import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpHost;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
@@ -173,10 +172,10 @@ public class SimpleHttpClientBuilder {
         HttpHost proxy = null;
         CredentialsProvider credentialsProvider = null;
 
-        if (StringUtils.isNotBlank(proxyHost) && proxyPort > 0) {
+        if (isNotBlank(proxyHost) && proxyPort > 0) {
             proxy = new HttpHost(proxyHost, proxyPort);
 
-            if (StringUtils.isNotBlank(proxyUsername) && StringUtils.isNotBlank(proxyPassword)) {
+            if (isNotBlank(proxyUsername) && isNotBlank(proxyPassword)) {
                 if (systemProperties) {
                     credentialsProvider = new SystemDefaultCredentialsProvider();
                 } else {
@@ -207,5 +206,9 @@ public class SimpleHttpClientBuilder {
 
         // build the http client
         return builder.build();
+    }
+
+    private boolean isNotBlank(final String test) {
+        return test != null && !test.isEmpty();
     }
 }

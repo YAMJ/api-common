@@ -21,10 +21,11 @@ package org.yamj.api.common.http;
 
 import java.util.ArrayList;
 import java.util.List;
-import org.apache.commons.lang3.RandomUtils;
+import java.util.Random;
 
 public class UserAgentSelector {
 
+    private static final Random RANDOM = new Random();
     private static final List<String> USER_AGENTS = new ArrayList<>();
 
     static {
@@ -65,7 +66,7 @@ public class UserAgentSelector {
      * @return
      */
     public static String randomUserAgent() {
-        final int i = RandomUtils.nextInt(0, USER_AGENTS.size());
+        final int i = RANDOM.nextInt(USER_AGENTS.size());
         return USER_AGENTS.get(i);
     }
 }

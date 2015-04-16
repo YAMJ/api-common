@@ -19,10 +19,13 @@
  */
 package org.yamj.api.common.http;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.StringWriter;
 import java.net.SocketTimeoutException;
 import java.nio.charset.Charset;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpDelete;
@@ -111,7 +114,7 @@ public class DigestedResponseReader {
 
             // a timeout should result in a 503 error
             // to signal that the service is temporarily not available
-            return new DigestedResponse(HTTP_STATUS_503, StringUtils.EMPTY);
+            return new DigestedResponse(HTTP_STATUS_503, "");
         } catch (IOException ex) {
             httpRequest.releaseConnection();
             throw ex;
