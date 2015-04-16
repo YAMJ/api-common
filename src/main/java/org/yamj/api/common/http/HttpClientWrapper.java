@@ -326,12 +326,24 @@ public class HttpClientWrapper implements CommonHttpClient, Closeable {
         return httpClient.execute(target, request, responseHandler, context);
     }
 
-    @Deprecated
+    /**
+     * Will be removed in final version 2.0
+     *
+     * @return
+     * @deprecated
+     */
     @Override
+    @Deprecated
     public ClientConnectionManager getConnectionManager() {
         return httpClient.getConnectionManager();
     }
 
+    /**
+     * Will be removed in final version 2.0
+     *
+     * @return
+     * @deprecated
+     */
     @Override
     @Deprecated
     public HttpParams getParams() {
