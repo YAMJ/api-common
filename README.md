@@ -3,6 +3,8 @@ Common API
 
 This is a set of common API functions used by the APIs of YAMJ
 
+[![Build Status](http://jenkins.omertron.com/job/API-Common/badge/icon)](http://jenkins.omertron.com/job/API-Common)
+
 ##SimpleHttpClientBuilder
 This class allows you to create a simple CloseableHttpClient for use in the APIs if required.
 
