@@ -208,7 +208,7 @@ public class SimpleHttpClientBuilder {
         return builder.build();
     }
 
-    private boolean isNotBlank(final String test) {
+    private static boolean isNotBlank(final String test) {
         return test != null && !test.isEmpty();
     }
 }
