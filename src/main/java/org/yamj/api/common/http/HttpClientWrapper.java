@@ -25,17 +25,11 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.charset.Charset;
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpHost;
-import org.apache.http.HttpRequest;
-import org.apache.http.HttpResponse;
+import org.apache.http.*;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.ResponseHandler;
-import org.apache.http.client.methods.HttpDelete;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.client.methods.HttpUriRequest;
+import org.apache.http.client.methods.*;
 import org.apache.http.client.utils.URIUtils;
 import org.apache.http.conn.ClientConnectionManager;
 import org.apache.http.params.HttpParams;
@@ -46,27 +40,32 @@ import org.apache.http.protocol.HttpContext;
 public class HttpClientWrapper implements CommonHttpClient, Closeable {
 
     private final HttpClient httpClient;
-    private boolean randomUserAgent = false;
+    private UserAgentSelector userAgentSelector;
 
     public HttpClientWrapper(HttpClient httpClient) {
         this.httpClient = httpClient;
     }
 
-    public void setRandomUserAgent(boolean randomUserAgent) {
-        this.randomUserAgent = randomUserAgent;
+    public HttpClientWrapper(HttpClient httpClient, UserAgentSelector userAgentSelector) {
+        this.httpClient = httpClient;
+        this.userAgentSelector = userAgentSelector;
+    }
+
+    public void setUserAgentSelector(UserAgentSelector userAgentSelector) {
+        this.userAgentSelector = userAgentSelector;
     }
 
     @SuppressWarnings("unused")
     protected void prepareRequest(HttpUriRequest request) throws ClientProtocolException {
-        if (randomUserAgent) {
-            request.setHeader(HTTP.USER_AGENT, UserAgentSelector.randomUserAgent());
+        if (userAgentSelector != null) {
+            request.setHeader(HTTP.USER_AGENT, userAgentSelector.getUserAgent());
         }
     }
 
     @SuppressWarnings("unused")
     protected void prepareRequest(HttpHost target, HttpRequest request) throws ClientProtocolException {
-        if (randomUserAgent) {
-            request.setHeader(HTTP.USER_AGENT, UserAgentSelector.randomUserAgent());
+        if (userAgentSelector != null) {
+            request.setHeader(HTTP.USER_AGENT, userAgentSelector.getUserAgent());
         }
     }
 
