@@ -51,6 +51,7 @@ public class HttpClientWrapper implements CommonHttpClient, Closeable {
         this.userAgentSelector = userAgentSelector;
     }
 
+    @Override
     public void setUserAgentSelector(UserAgentSelector userAgentSelector) {
         this.userAgentSelector = userAgentSelector;
     }

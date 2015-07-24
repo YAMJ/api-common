@@ -31,6 +31,8 @@ import org.apache.http.client.methods.HttpPost;
 
 public interface CommonHttpClient extends HttpClient {
 
+    void setUserAgentSelector(UserAgentSelector userAgentSelector);
+    
     DigestedResponse requestContent(URL url) throws IOException;
 
     DigestedResponse requestContent(URL url, Charset charset) throws IOException;
