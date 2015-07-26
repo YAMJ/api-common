@@ -69,14 +69,11 @@ public class HttpClientWrapper implements CommonHttpClient, Closeable {
 
     @SuppressWarnings("unused")
     protected void prepareRequest(HttpHost target, HttpRequest request) throws ClientProtocolException {
-        for (Header header : request.getHeaders(HTTP.USER_AGENT)) {
-            System.err.println(header.getName() + " -> " + header.getValue());
-        }
         if (userAgentSelector != null) {
-            request.setHeader(HTTP.USER_AGENT, userAgentSelector.getUserAgent());
-        }
-        for (Header header : request.getHeaders(HTTP.USER_AGENT)) {
-            System.err.println(header.getName() + " -> " + header.getValue());
+            final Header[] headers = request.getHeaders(HTTP.USER_AGENT);
+            if (headers == null || headers.length == 0) {
+                request.setHeader(HTTP.USER_AGENT, userAgentSelector.getUserAgent());
+            }
         }
     }
 
