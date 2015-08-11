@@ -26,7 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class WebBrowserUserAgentSelector implements UserAgentSelector {
+public class WebBrowserUserAgentSelector implements IUserAgentSelector {
 
     private static final Random RANDOM = new Random();
     private static final List<String> USER_AGENTS = new ArrayList<>();

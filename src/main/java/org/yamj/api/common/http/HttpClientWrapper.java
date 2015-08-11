@@ -40,19 +40,19 @@ import org.apache.http.protocol.HttpContext;
 public class HttpClientWrapper implements CommonHttpClient, Closeable {
 
     private final HttpClient httpClient;
-    private UserAgentSelector userAgentSelector;
+    private IUserAgentSelector userAgentSelector;
 
     public HttpClientWrapper(HttpClient httpClient) {
         this.httpClient = httpClient;
     }
 
-    public HttpClientWrapper(HttpClient httpClient, UserAgentSelector userAgentSelector) {
+    public HttpClientWrapper(HttpClient httpClient, IUserAgentSelector userAgentSelector) {
         this.httpClient = httpClient;
         this.userAgentSelector = userAgentSelector;
     }
 
     @Override
-    public void setUserAgentSelector(UserAgentSelector userAgentSelector) {
+    public void setUserAgentSelector(IUserAgentSelector userAgentSelector) {
         this.userAgentSelector = userAgentSelector;
     }
 
