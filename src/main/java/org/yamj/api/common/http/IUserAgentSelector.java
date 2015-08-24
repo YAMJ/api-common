@@ -19,24 +19,12 @@
  */
 package org.yamj.api.common.http;
 
-@Deprecated
-public class UserAgentSelector {
-
-    private static final IUserAgentSelector SELECTOR = new AndroidBrowserUserAgentSelector();
+public interface IUserAgentSelector {
 
     /**
-     * Class to hold a list of user agents that can be used
-     */
-    private UserAgentSelector() {
-        throw new UnsupportedOperationException("Class cannot be instantiated");
-    }
-
-    /**
-     * Get a random user agent to use for web requests
+     * Get a user agent to use for web requests
      *
      * @return
      */
-    public static String randomUserAgent() {
-        return SELECTOR.getUserAgent();
-    }
+    String getUserAgent(); 
 }

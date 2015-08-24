@@ -40,33 +40,40 @@ import org.apache.http.protocol.HttpContext;
 public class HttpClientWrapper implements CommonHttpClient, Closeable {
 
     private final HttpClient httpClient;
-    private UserAgentSelector userAgentSelector;
+    private IUserAgentSelector userAgentSelector;
 
     public HttpClientWrapper(HttpClient httpClient) {
         this.httpClient = httpClient;
     }
 
-    public HttpClientWrapper(HttpClient httpClient, UserAgentSelector userAgentSelector) {
+    public HttpClientWrapper(HttpClient httpClient, IUserAgentSelector userAgentSelector) {
         this.httpClient = httpClient;
         this.userAgentSelector = userAgentSelector;
     }
 
     @Override
-    public void setUserAgentSelector(UserAgentSelector userAgentSelector) {
+    public void setUserAgentSelector(IUserAgentSelector userAgentSelector) {
         this.userAgentSelector = userAgentSelector;
     }
 
+    
     @SuppressWarnings("unused")
     protected void prepareRequest(HttpUriRequest request) throws ClientProtocolException {
         if (userAgentSelector != null) {
-            request.setHeader(HTTP.USER_AGENT, userAgentSelector.getUserAgent());
+            final Header[] headers = request.getHeaders(HTTP.USER_AGENT);
+            if (headers == null || headers.length == 0) {
+                request.setHeader(HTTP.USER_AGENT, userAgentSelector.getUserAgent());
+            }
         }
     }
 
     @SuppressWarnings("unused")
     protected void prepareRequest(HttpHost target, HttpRequest request) throws ClientProtocolException {
         if (userAgentSelector != null) {
-            request.setHeader(HTTP.USER_AGENT, userAgentSelector.getUserAgent());
+            final Header[] headers = request.getHeaders(HTTP.USER_AGENT);
+            if (headers == null || headers.length == 0) {
+                request.setHeader(HTTP.USER_AGENT, userAgentSelector.getUserAgent());
+            }
         }
     }
 
