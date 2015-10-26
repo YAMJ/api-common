@@ -25,11 +25,19 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.charset.Charset;
-import org.apache.http.*;
+
+import org.apache.http.Header;
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpHost;
+import org.apache.http.HttpRequest;
+import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.ResponseHandler;
-import org.apache.http.client.methods.*;
+import org.apache.http.client.methods.HttpDelete;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.client.utils.URIUtils;
 import org.apache.http.conn.ClientConnectionManager;
 import org.apache.http.params.HttpParams;
@@ -57,7 +65,6 @@ public class HttpClientWrapper implements CommonHttpClient, Closeable {
     }
 
     
-    @SuppressWarnings("unused")
     protected void prepareRequest(HttpUriRequest request) throws ClientProtocolException {
         if (userAgentSelector != null) {
             final Header[] headers = request.getHeaders(HTTP.USER_AGENT);
@@ -67,7 +74,6 @@ public class HttpClientWrapper implements CommonHttpClient, Closeable {
         }
     }
 
-    @SuppressWarnings("unused")
     protected void prepareRequest(HttpHost target, HttpRequest request) throws ClientProtocolException {
         if (userAgentSelector != null) {
             final Header[] headers = request.getHeaders(HTTP.USER_AGENT);
