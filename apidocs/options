@@ -1,5 +1,5 @@
 -classpath
-'/root/release/api-common/target/checkout/target/classes:/root/.m2/repository/commons-dbcp/commons-dbcp/1.4/commons-dbcp-1.4.jar:/root/.m2/repository/org/apache/commons/commons-lang3/3.3.2/commons-lang3-3.3.2.jar:/root/.m2/repository/commons-logging/commons-logging/1.2/commons-logging-1.2.jar:/root/.m2/repository/org/apache/httpcomponents/httpclient/4.4/httpclient-4.4.jar:/root/.m2/repository/org/apache/httpcomponents/httpcore/4.4/httpcore-4.4.jar:/root/.m2/repository/commons-pool/commons-pool/1.6/commons-pool-1.6.jar:/root/.m2/repository/org/slf4j/slf4j-api/1.7.10/slf4j-api-1.7.10.jar:/root/.m2/repository/commons-codec/commons-codec/1.10/commons-codec-1.10.jar'
+'/root/release/api-common/target/checkout/target/classes:/root/.m2/repository/commons-logging/commons-logging/1.2/commons-logging-1.2.jar:/root/.m2/repository/org/apache/httpcomponents/httpclient/4.5.1/httpclient-4.5.1.jar:/root/.m2/repository/org/apache/httpcomponents/httpcore/4.4.3/httpcore-4.4.3.jar:/root/.m2/repository/org/slf4j/slf4j-api/1.7.12/slf4j-api-1.7.12.jar:/root/.m2/repository/commons-codec/commons-codec/1.9/commons-codec-1.9.jar'
 -encoding
 'UTF-8'
 -protected
@@ -15,10 +15,10 @@
 -docencoding
 'UTF-8'
 -doctitle
-'API-Common 1.4 API'
+'API-Common 2.0 API'
 -link
 'http://java.sun.com/javase/6/docs/api'
 -use
 -version
 -windowtitle
-'API-Common 1.4 API'
+'API-Common 2.0 API'
