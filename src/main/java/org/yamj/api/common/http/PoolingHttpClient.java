@@ -53,7 +53,7 @@ public class PoolingHttpClient extends HttpClientWrapper {
         this.routedHosts = new ArrayList<>();
     }
 
-    protected void addGroupLimit(String group, Integer limit) {
+    public void addGroupLimit(String group, Integer limit) {
         this.groupLimits.put(group, limit);
     }
 
