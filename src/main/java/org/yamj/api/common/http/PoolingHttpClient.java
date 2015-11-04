@@ -53,6 +53,10 @@ public class PoolingHttpClient extends HttpClientWrapper {
         this.routedHosts = new ArrayList<>();
     }
 
+    public Charset getDefaultCharset() {
+        return UTF8_CHARSET;
+    }
+    
     public void addGroupLimit(String group, Integer limit) {
         this.groupLimits.put(group, limit);
     }
@@ -90,7 +94,7 @@ public class PoolingHttpClient extends HttpClientWrapper {
   
     @Override
     public DigestedResponse requestContent(HttpGet httpGet, Charset charset) throws IOException {
-        return super.requestContent(httpGet, (charset == null ? UTF8_CHARSET : charset));
+        return super.requestContent(httpGet, (charset == null ? getDefaultCharset() : charset));
     }
     
     @Override
