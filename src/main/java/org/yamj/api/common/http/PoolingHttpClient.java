@@ -21,11 +21,7 @@ package org.yamj.api.common.http;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
+import java.util.*;
 import org.apache.http.HttpHost;
 import org.apache.http.HttpRequest;
 import org.apache.http.client.ClientProtocolException;
@@ -94,7 +90,7 @@ public class PoolingHttpClient extends HttpClientWrapper {
   
     @Override
     public DigestedResponse requestContent(HttpGet httpGet, Charset charset) throws IOException {
-        return super.requestContent(httpGet, (charset == null ? getDefaultCharset() : charset));
+        return super.requestContent(httpGet, (charset == null) ? getDefaultCharset() : charset);
     }
     
     @Override

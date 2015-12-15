@@ -38,7 +38,7 @@ public final class ResponseTools {
 
     
     public static boolean isOK(final int statusCode) {
-        return (statusCode == 200);
+        return statusCode == 200;
     }
 
     public static boolean isNotOK(final DigestedResponse response) {
@@ -61,7 +61,7 @@ public final class ResponseTools {
         return isTemporaryError(apiException.getResponseCode());
     }
 
-    public static boolean isTemporaryError(final int statusCode) {
+    public static boolean isTemporaryError(final int statusCode) { //NOSONAR
         switch (statusCode) {
             case 408:
             case 419:
