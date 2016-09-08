@@ -15,6 +15,15 @@ Then, set properties using the `.setXXX()` functions and finally create the http
 
     CloseableHttpClient httpClient = shcb.build();
 
+Android Usage
+-------------
+
+If you want to use this library in an android project, then adding the following lines to your gradle file should help matters.
+
+    useLibrary 'org.apache.http.legacy'
+    compile group: 'org.apache.httpcomponents' , name: 'httpclient-android' , version: '4.3.5.1'
+
+
 Project Documentation
 ---------------------
 The automatically generated documentation can be found [HERE](http://yamj.github.io/api-common/)
