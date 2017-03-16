@@ -1,5 +1,5 @@
 -classpath
-'/root/release/api-common/target/checkout/target/classes:/root/.m2/repository/commons-logging/commons-logging/1.2/commons-logging-1.2.jar:/root/.m2/repository/org/apache/httpcomponents/httpclient/4.5.1/httpclient-4.5.1.jar:/root/.m2/repository/org/apache/httpcomponents/httpcore/4.4.3/httpcore-4.4.3.jar:/root/.m2/repository/org/slf4j/slf4j-api/1.7.12/slf4j-api-1.7.12.jar:/root/.m2/repository/commons-codec/commons-codec/1.9/commons-codec-1.9.jar'
+'/root/release/api-common/target/checkout/target/classes:/root/.m2/repository/commons-logging/commons-logging/1.2/commons-logging-1.2.jar:/root/.m2/repository/org/apache/httpcomponents/httpclient/4.5.3/httpclient-4.5.3.jar:/root/.m2/repository/org/apache/httpcomponents/httpcore/4.4.6/httpcore-4.4.6.jar:/root/.m2/repository/org/slf4j/slf4j-api/1.7.24/slf4j-api-1.7.24.jar:/root/.m2/repository/commons-codec/commons-codec/1.9/commons-codec-1.9.jar'
 -encoding
 'UTF-8'
 -protected
@@ -7,7 +7,7 @@
 '/root/release/api-common/target/checkout/src/main/java:/root/release/api-common/target/checkout/target/generated-sources/annotations'
 -author
 -bottom
-'Copyright &#169; 2013-2015. All Rights Reserved.'
+'Copyright &#169; 2013-2017. All Rights Reserved.'
 -charset
 'UTF-8'
 -d
@@ -15,10 +15,10 @@
 -docencoding
 'UTF-8'
 -doctitle
-'API-Common 2.0 API'
+'API-Common 2.1 API'
 -link
 'http://java.sun.com/javase/6/docs/api'
 -use
 -version
 -windowtitle
-'API-Common 2.0 API'
+'API-Common 2.1 API'
